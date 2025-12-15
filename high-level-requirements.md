@@ -21,13 +21,12 @@ The complete solution consists of these microservices components:
 # Microservices Components
 
 ## Checkmate
-A simple to-do or grocery checklist microservice. The Checkmate app is not only a passive list-keeper, it is also an intelligent assistant agent to help guide the user to extract new tasks, organise and summarise task status.
+A simple to-do or grocery checklist microservice. The todo list keep track of the status of each task and allow user to update the status of each task. Each task has a title, description, status and due date.
 
 **Technical Requirements:**
 *   Built using **NestJS**.
 *   Data is stored in **Firestore**.
 *   Exposed as a RESTful API.
-*   Uses **Gemini API** to process natural language input and break it down into tasks.
 
 ## Stash 
 A Personal Link Aggregator microservice to save and categorize web links.
@@ -37,6 +36,15 @@ A Personal Link Aggregator microservice to save and categorize web links.
 *   Data is stored in **Firestore**.
 *   Exposed as a RESTful API.
 *   **Processing Pipeline**: Fetches content from the URL -> Sends to **Gemini API** for summarization and tagging -> Saves metadata to Firestore.
+
+## Todo Agent
+Todo Agent is an agent in a microservice that can invoke Checkmate for to-do list management. The Todo Agent is not only a passive list-keeper, it is also an intelligent assistant agent to help guide the user to extract new tasks, organise and summarise task status.
+
+**Technical Requirements:**
+*   Built using **Agent Development Kit ADK (Python)**.
+*   Exposed via A2A (Agent-to-Agent) interfaces.
+*   Invokes Checkmate for read/write operations via MCP (Model Context Protocol)
+*   Uses **Gemini API** to process natural language input and break it down into tasks.
 
 ## Personal Assistant Agent
 Personal Assistant Agent is a root orchestration agent in a microservice that can interact with Checkmate and Stash.
@@ -73,19 +81,20 @@ A landing web page for each authenticated user connecting Checkmate, Stash and P
 graph TD
     User[Authenticated User] -->|HTTPS| Portal[SaaS Portal Next.js]
     
-    subgraph "SaaS Portal Context"
+    subgraph "SaaS Portal"
         Portal -->|Auth| FirebaseAuth[Firebase Authentication]
     end
 
-    subgraph "Direct Interactions"
+    subgraph "Backend Services"
         Portal -->|REST API| CheckmateAPI[Checkmate Service NestJS]
         Portal -->|REST API| StashAPI[Stash Service NestJS]
     end
 
-    subgraph "Agentic Interactions"
+    subgraph "Agents"
         Portal -->|Agent Interface| PAA[Personal Assistant Agent ADK/Python]
-        PAA -->|A2A| CheckmateAPI
+        PAA -->|A2A| TodoAgent[Todo Agent ADK/Python]
         PAA -->|MCP| StashAPI
+        TodoAgent -->|MCP| CheckmateAPI
     end
 
     subgraph "Data Layer"
@@ -94,15 +103,17 @@ graph TD
     end
 
     subgraph "AI Services"
-        CheckmateAPI -->|Process Text| Gemini[Gemini API]
+        TodoAgent -->|Process Text| Gemini[Gemini API]
         StashAPI -->|Summarize| Gemini
-    end    
+    end
 
     classDef service fill:#f9f,stroke:#333,stroke-width:2px;
     classDef storage fill:#ff9,stroke:#333,stroke-width:2px;
     classDef external fill:#ccf,stroke:#333,stroke-width:2px;
+    classDef agent fill:#9f9,stroke:#333,stroke-width:2px;
     
-    class PAA,CheckmateAPI,StashAPI,Portal service;
+    class CheckmateAPI,StashAPI,Portal service;
+    class PAA,TodoAgent agent;
     class FirestoreDB storage;
     class FirebaseAuth,Gemini external;
 ```
