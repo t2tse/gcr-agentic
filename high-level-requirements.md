@@ -12,6 +12,7 @@ The complete solution consists of these microservices components:
 *   **Frontend**: Next.js (React Framework)
 *   **Backend Services**: Node.js with NestJS Framework
 *   **Agent Framework**: Agent Development Kit (ADK) (Python)
+*   **Service Runtime**: Google Cloud Run
 *   **Database**: Google Cloud Firestore (NoSQL)
 *   **Authentication**: Firebase Authentication
 *   **AI Models**: Google Gemini API
@@ -70,29 +71,32 @@ A landing web page for each authenticated user connecting Checkmate, Stash and P
 
 ```mermaid
 graph TD
-    User[Authenticated User] -->|HTTPS| Portal[SaaS Portal (Next.js)]
+    User[Authenticated User] -->|HTTPS| Portal[SaaS Portal Next.js]
     
     subgraph "SaaS Portal Context"
         Portal -->|Auth| FirebaseAuth[Firebase Authentication]
     end
 
     subgraph "Direct Interactions"
-        Portal -->|REST API| CheckmateAPI[Checkmate Service (NestJS)]
-        Portal -->|REST API| StashAPI[Stash Service (NestJS)]
+        Portal -->|REST API| CheckmateAPI[Checkmate Service NestJS]
+        Portal -->|REST API| StashAPI[Stash Service NestJS]
     end
 
     subgraph "Agentic Interactions"
-        Portal -->|Agent Interface| PAA[Personal Assistant Agent (ADK/Python)]
-        PAA -->|A2A/API| CheckmateAPI
-        PAA -->|MCP/API| StashAPI
+        Portal -->|Agent Interface| PAA[Personal Assistant Agent ADK/Python]
+        PAA -->|A2A| CheckmateAPI
+        PAA -->|MCP| StashAPI
     end
 
-    subgraph "Data & AI Layer"
-        CheckmateAPI -->|Read/Write| FirestoreDB[(Firestore)]
+    subgraph "Data Layer"
+        CheckmateAPI -->|Read/Write| FirestoreDB[Firestore]
         StashAPI -->|Read/Write| FirestoreDB
+    end
+
+    subgraph "AI Services"
         CheckmateAPI -->|Process Text| Gemini[Gemini API]
         StashAPI -->|Summarize| Gemini
-    end
+    end    
 
     classDef service fill:#f9f,stroke:#333,stroke-width:2px;
     classDef storage fill:#ff9,stroke:#333,stroke-width:2px;
