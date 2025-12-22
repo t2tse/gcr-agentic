@@ -1,0 +1,89 @@
+# Dashboard Application Design
+
+This document outlines the detailed application design for the **Dashboard**, the central landing page of the Personal Assistant application.
+
+## 1. Overview
+The Dashboard serves as the command center, providing an aggregated view of the user's personal data. It connects to both **Checkmate** (for tasks) and **Stash** (for links) to present a "Start of Day" summary.
+
+## 2. User Interface Design Scope
+Based on the high-level requirements, the Dashboard UI includes:
+*   **Greeting**: Personalized message ("Good Morning, [Name]") + Task Summary count.
+*   **Quick Actions**: Buttons for "Quick Add Task", "Stash Link".
+*   **Today's Focus**: List of high-priority/due-today tasks (from Checkmate).
+*   **Statistics**: Progress bars (Completion rates).
+*   **Navigation**: Links to Checkmate, Stash, and Settings.
+
+## 3. Architecture & Components
+*   **Frontend**: Next.js Page (`/dashboard`).
+*   **Authentication**: Firebase Client SDK (for User Profile/Name).
+*   **Backend Integrations**:
+    *   **Checkmate API**: Fetches task data.
+    *   **Stash API**: Fetches link stats.
+    *   *Note*: The Next.js API Routes (BFF pattern) or Server Components can be used to aggregate this data server-side, or the client can fetch in parallel. For this design, we will assume Client-Side fetching for responsiveness with skeleton loaders, or Server-Side Rendering (SSR) for the initial load.
+
+## 4. User Journey & Sequence Diagrams
+
+### Journey 1: Loading the Dashboard
+**Goal**: User logs in and sees their personalized dashboard with data from multiple microservices.
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant Frontend as Next.js Client
+    participant Auth as Firebase Auth
+    participant Checkmate as Checkmate API
+    participant Stash as Stash API
+    
+    User->>Frontend: Navigates to /dashboard
+    
+    %% Authentication & Profile
+    Frontend->>Auth: Get Current User
+    Auth-->>Frontend: Return User Profile (Name, Token)
+    Frontend->>User: Render Greeting ("Good Morning, Tommy")
+    
+    %% Parallel Data Fetching
+    par Fetch Today's Tasks
+        Frontend->>Checkmate: GET /tasks?dueDate=today&status=incomplete
+        Checkmate-->>Frontend: Return Tasks JSON
+        Frontend->>User: Render "Today's Focus" List
+    and Fetch Task Stats
+        Frontend->>Checkmate: GET /stats
+        Checkmate-->>Frontend: Return { total, completed, remaining }
+        Frontend->>User: Render Progress Bar & "You have X tasks remaining"
+    and Fetch Stash Stats
+        Frontend->>Stash: GET /stats
+        Stash-->>Frontend: Return { totalStashed, aiSummarized }
+        Frontend->>User: Render Stash Summary Cards
+    end
+    
+    Note over User, Frontend: Dashboard is fully loaded
+```
+
+### Journey 2: Quick Action - Quick Add Task
+**Goal**: User clicks "Quick Add" to add a task. User can optionally select a specific list, otherwise it defaults to "Inbox" (or a user-configured default).
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant Frontend as Next.js Client
+    participant Checkmate as Checkmate API
+    
+    User->>Frontend: Clicks "Quick Add" Button
+    Frontend->>User: Opens Modal/Popover with Title Input and List Dropdown (Default: 'Inbox')
+    
+    User->>Frontend: Enters "Schedule Dentist"
+    
+    alt User Selects List
+        User->>Frontend: Selects "Personal" List from Dropdown
+    else Custom List Not Selected
+        Frontend->>Frontend: Uses Default List ("Inbox")
+    end
+
+    User->>Frontend: Clicks Save / Hits Enter
+    
+    Frontend->>Checkmate: POST /tasks
+    Note right of Frontend: Body: { title: "Schedule Dentist", listId: "selected-or-default-id" }
+    Checkmate-->>Frontend: Return 201 Created
+    
+    Frontend->>User: Show Success Toast & Update "Tasks Remaining" Counter
+```
