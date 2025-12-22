@@ -1,0 +1,320 @@
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Stash Links Aggregator</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f8f9fc",
+                        "background-dark": "#101622",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a2233",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 4px;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background-color: #334155;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-[#0d121b] dark:text-[#e0e0e0] flex h-screen overflow-hidden">
+<aside class="w-64 flex-shrink-0 border-r border-[#cfd7e7] dark:border-gray-800 bg-surface-light dark:bg-background-dark flex flex-col p-4 hidden md:flex">
+<div class="flex flex-col gap-6 flex-1 overflow-y-auto pr-2">
+<div class="flex gap-2 items-center px-2 py-1 flex-shrink-0">
+<h1 class="text-[#0d121b] dark:text-white text-lg font-bold leading-normal truncate">Stash Links</h1>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#e7ebf3] dark:hover:bg-gray-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-[#4c669a] dark:text-gray-400 group-hover:text-primary transition-colors">dashboard</span>
+<p class="text-[#0d121b] dark:text-gray-200 text-sm font-medium leading-normal">Dashboard</p>
+</a>
+<div class="pt-4">
+<a class="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-[#e7ebf3] dark:hover:bg-gray-800 transition-colors group cursor-pointer" href="#">
+<div class="flex items-center gap-3 overflow-hidden">
+<span class="material-symbols-outlined text-[#4c669a] dark:text-gray-400 text-[20px]" style="font-variation-settings: 'FILL' 1;">check_box</span>
+<p class="text-[#0d121b] dark:text-gray-200 text-sm font-medium leading-normal truncate">Checkmate Todo</p>
+</div>
+<div class="flex items-center gap-2">
+<button class="opacity-0 group-hover:opacity-100 text-[#4c669a] hover:text-primary hover:bg-gray-200 dark:hover:bg-gray-700 rounded p-0.5 transition-all">
+<span class="material-symbols-outlined text-[16px]">more_horiz</span>
+</button>
+</div>
+</a>
+</div>
+<div class="my-2 border-t border-[#cfd7e7] dark:border-gray-800"></div>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 dark:bg-primary/20 group" href="#">
+<span class="material-symbols-outlined text-primary text-[24px]" style="font-variation-settings: 'FILL' 1;">link</span>
+<p class="text-primary text-sm font-bold leading-normal">Stash Links</p>
+</a>
+</nav>
+</div>
+<div class="flex flex-col gap-2 flex-shrink-0 mt-4">
+<div class="border-t border-[#cfd7e7] dark:border-gray-800 my-1"></div>
+<div class="flex gap-3 items-center px-2 py-1 flex-shrink-0">
+<div class="bg-center bg-no-repeat bg-cover rounded-full size-10 flex-shrink-0" data-alt="User profile picture showing a smiling person" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCIqd5sPdz_v6tdy9yv2CiRwON5C9gN8HHedBWdsIY3FOg4-IuG8lnj56HPYr6sCZL-FdunViAdkSTuK1dPc6O1eewahYG0ZTz3dNFyb7u4GZcCVwDSJkqRl3cuO0QWNNWW8rjmZffUZG9gvstpNbUx18wVVXLHYTNUwArbAqR-wdiBis9WUi3PjWVtByTGk4M4isXPljHd2tw2tmJOwyXsGQhZPVc3pWGyIsx8pJjxgnE46dxqVPEXdPrwy5zer7DF3USjYwNiLFua");'></div>
+<div class="flex flex-col overflow-hidden">
+<h1 class="text-[#0d121b] dark:text-white text-base font-medium leading-normal truncate">Alex Johnson</h1>
+</div>
+</div>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-[#e7ebf3] dark:hover:bg-gray-800 transition-colors group" href="#">
+<span class="material-symbols-outlined text-[#4c669a] dark:text-gray-400 group-hover:text-primary transition-colors">settings</span>
+<p class="text-[#0d121b] dark:text-gray-200 text-sm font-medium leading-normal">Settings</p>
+</a>
+</div>
+</aside>
+<main class="flex-1 flex flex-col h-full overflow-hidden bg-background-light dark:bg-background-dark relative">
+<header class="md:hidden flex items-center justify-between p-4 bg-surface-light dark:bg-surface-dark border-b border-[#cfd7e7] dark:border-gray-800">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+<span class="font-bold text-lg dark:text-white">TaskMaster</span>
+</div>
+<button class="text-[#0d121b] dark:text-white">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</header>
+<div class="flex-1 overflow-y-auto">
+<div class="max-w-[1000px] mx-auto p-4 md:p-8 flex flex-col gap-6">
+<div class="flex items-center justify-between">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-3xl md:text-4xl">link</span>
+<h1 class="text-[#0d121b] dark:text-white text-3xl md:text-4xl font-black leading-tight tracking-[-0.033em]">Stash Links</h1>
+</div>
+<p class="text-[#4c669a] dark:text-gray-400 text-base font-normal leading-normal">Your saved articles and resources</p>
+</div>
+<div class="flex items-center gap-2">
+<div class="relative group">
+<button class="flex items-center gap-2 px-3 py-2 rounded-lg border border-[#cfd7e7] dark:border-gray-700 bg-surface-light dark:bg-surface-dark text-[#0d121b] dark:text-white text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+<span>Options</span>
+<span class="material-symbols-outlined text-[18px]">expand_more</span>
+</button>
+<div class="absolute right-0 mt-2 w-48 bg-white dark:bg-surface-dark border border-[#cfd7e7] dark:border-gray-700 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-20">
+<a class="flex items-center gap-2 px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 text-sm text-[#0d121b] dark:text-gray-200" href="#">
+<span class="material-symbols-outlined text-[18px]">ios_share</span> Export Links
+                                </a>
+<div class="border-t border-[#cfd7e7] dark:border-gray-700 my-1"></div>
+<a class="flex items-center gap-2 px-4 py-2 hover:bg-red-50 dark:hover:bg-red-900/20 text-sm text-red-600 dark:text-red-400" href="#">
+<span class="material-symbols-outlined text-[18px]">delete_sweep</span> Clear All
+                                </a>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="flex flex-col gap-2 rounded-xl p-5 border border-[#cfd7e7] dark:border-gray-700 bg-surface-light dark:bg-surface-dark shadow-sm">
+<div class="flex justify-between items-start">
+<p class="text-[#4c669a] dark:text-gray-400 text-sm font-medium uppercase tracking-wider">Total Stashed</p>
+<span class="material-symbols-outlined text-primary">library_books</span>
+</div>
+<p class="text-[#0d121b] dark:text-white tracking-tight text-3xl font-bold leading-tight">42</p>
+</div>
+<div class="flex flex-col gap-2 rounded-xl p-5 border border-[#cfd7e7] dark:border-gray-700 bg-surface-light dark:bg-surface-dark shadow-sm">
+<div class="flex justify-between items-start">
+<p class="text-[#4c669a] dark:text-gray-400 text-sm font-medium uppercase tracking-wider">AI Summarized</p>
+<span class="material-symbols-outlined text-purple-500" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<p class="text-[#0d121b] dark:text-white tracking-tight text-3xl font-bold leading-tight">36</p>
+</div>
+</div>
+<div class="flex flex-col gap-3 sticky top-0 z-10 pt-2 pb-4 bg-background-light dark:bg-background-dark">
+<label class="relative flex items-center w-full shadow-lg rounded-xl overflow-hidden group focus-within:ring-2 ring-primary/50 transition-shadow">
+<span class="absolute left-4 text-[#4c669a] flex items-center">
+<span class="material-symbols-outlined">add_link</span>
+</span>
+<input class="w-full h-14 pl-12 pr-32 bg-surface-light dark:bg-surface-dark text-[#0d121b] dark:text-white placeholder:text-[#4c669a] border-none focus:ring-0 text-base" placeholder="Paste a URL to stash (e.g. https://example.com/article)..." type="url"/>
+<div class="absolute right-2 flex items-center gap-1">
+<button class="p-2 rounded-lg text-[#4c669a] hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" title="Auto Tag">
+<span class="material-symbols-outlined text-[20px]">label</span>
+</button>
+<button class="p-2 rounded-lg text-[#4c669a] hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" title="Generate Summary">
+<span class="material-symbols-outlined text-[20px]">auto_awesome</span>
+</button>
+<button class="hidden sm:flex h-10 px-4 items-center justify-center bg-primary text-white rounded-lg text-sm font-bold shadow-md hover:bg-blue-600 transition-colors ml-1">
+                                Save
+                            </button>
+</div>
+</label>
+</div>
+<div class="flex flex-wrap justify-between items-center gap-4 px-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#4c669a]">filter_alt</span>
+<span class="text-sm font-bold text-[#4c669a] uppercase tracking-wide">Category:</span>
+<select class="text-sm font-bold text-[#0d121b] dark:text-white bg-transparent border-none p-0 pr-6 focus:ring-0 cursor-pointer">
+<option>All Categories</option>
+<option>Tech</option>
+<option>AI</option>
+<option>Food</option>
+<option>Lifestyle</option>
+<option>Home</option>
+<option>Finance</option>
+</select>
+</div>
+<div class="flex gap-2 items-center">
+<div class="flex bg-white dark:bg-surface-dark rounded-lg border border-[#cfd7e7] dark:border-gray-700 p-0.5">
+<button class="p-1.5 rounded text-[#4c669a] hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors" title="List View">
+<span class="material-symbols-outlined text-[18px]">view_list</span>
+</button>
+<button class="p-1.5 rounded bg-gray-100 dark:bg-gray-700 text-primary shadow-sm" title="Grid View">
+<span class="material-symbols-outlined text-[18px]">grid_view</span>
+</button>
+</div>
+<button class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[#cfd7e7] dark:border-gray-700 bg-white dark:bg-surface-dark text-[#0d121b] dark:text-gray-200 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+<span class="material-symbols-outlined text-[18px]">sort</span>
+<span>Sort</span>
+</button>
+</div>
+</div>
+<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-10">
+<div class="group flex flex-col gap-4 p-5 rounded-xl bg-surface-light dark:bg-surface-dark border border-transparent hover:border-primary/30 shadow-sm hover:shadow-md transition-all cursor-pointer relative">
+<div class="flex flex-col flex-1 min-w-0 gap-2">
+<div class="flex items-center gap-2">
+<div class="size-8 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-primary flex-shrink-0">
+<span class="material-symbols-outlined text-[18px]">public</span>
+</div>
+<a class="text-primary font-bold text-base truncate hover:underline" href="#">https://techcrunch.com/2023/11/06/openai-updates-gpt-4-turbo</a>
+</div>
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[16px] text-purple-500 mt-0.5 flex-shrink-0" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<p class="text-[#0d121b] dark:text-gray-200 text-sm leading-relaxed line-clamp-3">
+                                    OpenAI announces GPT-4 Turbo with 128k context window and significantly lower prices at their first developer conference. The update includes improved function calling and new modal capabilities.
+                                </p>
+</div>
+<div class="flex flex-wrap items-center gap-2 mt-auto">
+<span class="flex items-center gap-1 text-blue-700 bg-blue-100 dark:bg-blue-900/30 px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wide border border-blue-200 dark:border-blue-800">
+                                    tech
+                                </span>
+<span class="flex items-center gap-1 text-purple-700 bg-purple-100 dark:bg-purple-900/30 px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wide border border-purple-200 dark:border-purple-800">
+                                    ai
+                                </span>
+</div>
+</div>
+<div class="absolute top-4 right-4 flex flex-col items-end gap-2">
+<input class="size-5 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer" title="Mark as Read" type="checkbox"/>
+<button class="opacity-100 group-hover:opacity-100 p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-all rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</div>
+<div class="group flex flex-col gap-4 p-5 rounded-xl bg-surface-light dark:bg-surface-dark border border-transparent hover:border-primary/30 shadow-sm hover:shadow-md transition-all cursor-pointer relative">
+<div class="flex flex-col flex-1 min-w-0 gap-2">
+<div class="flex items-center gap-2">
+<div class="size-8 rounded-full bg-orange-50 dark:bg-orange-900/20 flex items-center justify-center text-orange-600 flex-shrink-0">
+<span class="material-symbols-outlined text-[18px]">restaurant</span>
+</div>
+<a class="text-primary font-bold text-base truncate hover:underline" href="#">https://www.bonappetit.com/recipe/classic-carbonara</a>
+</div>
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[16px] text-purple-500 mt-0.5 flex-shrink-0" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<p class="text-[#0d121b] dark:text-gray-200 text-sm leading-relaxed line-clamp-3">
+                                    A comprehensive guide to making the perfect authentic Roman carbonara using only guanciale, pecorino romano, eggs, and black pepper. No cream allowed.
+                                </p>
+</div>
+<div class="flex flex-wrap items-center gap-2 mt-auto">
+<span class="flex items-center gap-1 text-orange-700 bg-orange-100 dark:bg-orange-900/30 px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wide border border-orange-200 dark:border-orange-800">
+                                    food
+                                </span>
+<span class="flex items-center gap-1 text-teal-700 bg-teal-100 dark:bg-teal-900/30 px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wide border border-teal-200 dark:border-teal-800">
+                                    lifestyle
+                                </span>
+</div>
+</div>
+<div class="absolute top-4 right-4 flex flex-col items-end gap-2">
+<input class="size-5 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer" title="Mark as Read" type="checkbox"/>
+<button class="opacity-100 group-hover:opacity-100 p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-all rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</div>
+<div class="group flex flex-col gap-4 p-5 rounded-xl bg-surface-light dark:bg-surface-dark border border-transparent hover:border-primary/30 shadow-sm hover:shadow-md transition-all cursor-pointer relative">
+<div class="flex flex-col flex-1 min-w-0 gap-2">
+<div class="flex items-center gap-2">
+<div class="size-8 rounded-full bg-green-50 dark:bg-green-900/20 flex items-center justify-center text-green-600 flex-shrink-0">
+<span class="material-symbols-outlined text-[18px]">attach_money</span>
+</div>
+<a class="text-primary font-bold text-base truncate hover:underline" href="#">https://www.bloomberg.com/news/articles/market-wrap-nov-07</a>
+</div>
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[16px] text-purple-500 mt-0.5 flex-shrink-0" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<p class="text-[#0d121b] dark:text-gray-200 text-sm leading-relaxed line-clamp-3">
+                                    Global markets rally as latest inflation data comes in lower than expected, signaling potential rate pause by central banks. Tech stocks lead the gains.
+                                </p>
+</div>
+<div class="flex flex-wrap items-center gap-2 mt-auto">
+<span class="flex items-center gap-1 text-green-700 bg-green-100 dark:bg-green-900/30 px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wide border border-green-200 dark:border-green-800">
+                                    finance
+                                </span>
+</div>
+</div>
+<div class="absolute top-4 right-4 flex flex-col items-end gap-2">
+<input class="size-5 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer" title="Mark as Read" type="checkbox"/>
+<button class="opacity-100 group-hover:opacity-100 p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-all rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</div>
+<div class="group flex flex-col gap-4 p-5 rounded-xl bg-surface-light dark:bg-surface-dark border border-transparent hover:border-primary/30 shadow-sm hover:shadow-md transition-all cursor-pointer relative">
+<div class="flex flex-col flex-1 min-w-0 gap-2">
+<div class="flex items-center gap-2">
+<div class="size-8 rounded-full bg-pink-50 dark:bg-pink-900/20 flex items-center justify-center text-pink-600 flex-shrink-0">
+<span class="material-symbols-outlined text-[18px]">chair</span>
+</div>
+<a class="text-primary font-bold text-base truncate hover:underline" href="#">https://www.architecturaldigest.com/decor-trends-2024</a>
+</div>
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-[16px] text-purple-500 mt-0.5 flex-shrink-0" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<p class="text-[#0d121b] dark:text-gray-200 text-sm leading-relaxed line-clamp-3">
+                                    Top interior design trends to watch in 2024 include biophilic design, sustainable materials, and a return to warm minimalism and earthy color palettes.
+                                </p>
+</div>
+<div class="flex flex-wrap items-center gap-2 mt-auto">
+<span class="flex items-center gap-1 text-pink-700 bg-pink-100 dark:bg-pink-900/30 px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wide border border-pink-200 dark:border-pink-800">
+                                    home
+                                </span>
+<span class="flex items-center gap-1 text-teal-700 bg-teal-100 dark:bg-teal-900/30 px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wide border border-teal-200 dark:border-teal-800">
+                                    lifestyle
+                                </span>
+</div>
+</div>
+<div class="absolute top-4 right-4 flex flex-col items-end gap-2">
+<input class="size-5 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer" title="Mark as Read" type="checkbox"/>
+<button class="opacity-100 group-hover:opacity-100 p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-all rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+<span class="material-symbols-outlined text-[18px]">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

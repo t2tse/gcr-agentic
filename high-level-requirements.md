@@ -18,10 +18,39 @@ The complete solution consists of these microservices components:
 *   **AI Models**: Google Gemini API
 
 
+# UI Design Requirements
+
+## Dashboard
+The Dashboard serves as the landing page, providing an aggregated view of the user's day and data.
+*   **Greeting**: "Good Morning/Afternoon/Evening, [User Name]" with a summary of remaining tasks ("You have X tasks remaining for today").
+*   **Quick Actions**: Prominent buttons (e.g., "Quick Add").
+*   **Today's Focus**: A list of high-priority tasks due today, showing title, time/location, priority ("High", "Medium", "Low"), and status.
+*   **Statistics**: Visual progress indicators (e.g., "85% Completion").
+*   **Navigation**: Easy access to Checkmate Todo, Stash Links, and Settings.
+
+## Checkmate (Task Management)
+*   **Lists**: Sidebar navigation for filtering tasks by list (e.g., "Personal Tasks", "Groceries", "Work Projects") with task counts.
+*   **Task List View**:
+    *   Shows tasks with checkbox, title, priority, due date and status.
+    *   Supports filtering (All, Incomplete, Completed).
+    *   Supports sorting.
+    *   Bulk actions (Delete).
+*   **Task Creation**: Input field for adding new tasks to specific lists, with options for due date and priority.
+*   **Stats**: Summary cards for "Total Tasks", "Completed", and "Overdue".
+
+## Stash (Link Aggregator)
+*   **Link Views**:
+    *   **Grid View**: Card layout showing preview image, source domain, title, AI-generated summary, tags, and footer actions.
+    *   **List View**: Compact row layout with similar information.
+*   **Categorization**: Filter dropdown for categories (Tech, AI, Food, etc.) - mapped to **tags**.
+*   **Stats**: Summary cards for "Total Stashed" and "AI Summarized".
+*   **Add Link**: Input field to paste a URL with options for "Auto Tag" and "Generate Summary".
+
+
 # Microservices Components
 
 ## Checkmate
-A simple to-do or grocery checklist microservice. The todo list keep track of the status of each task and allow user to update the status of each task. Each task has a title, description, status and due date.
+A simple to-do or grocery checklist microservice. The todo list keep track of the status of each task and allow user to update the status of each task. Each task has a title, description, status, due date, **priority**, and **list association**.
 
 **Technical Requirements:**
 *   Built using **NestJS**.
@@ -29,13 +58,14 @@ A simple to-do or grocery checklist microservice. The todo list keep track of th
 *   Exposed as a RESTful API.
 
 ## Stash 
-A Personal Link Aggregator microservice to save and categorize web links.
+A Personal Link Aggregator microservice to save and categorize web links. Categories are implemented via **tags**.
 
 **Technical Requirements:**
 *   Built using **NestJS**.
 *   Data is stored in **Firestore**.
 *   Exposed as a RESTful API.
 *   **Processing Pipeline**: Fetches content from the URL -> Sends to **Gemini API** for summarization and tagging -> Saves metadata to Firestore.
+*   **Data Structure**: Must support `tags` (for categorization) and `summary` (nullable, for AI stats).
 
 ## Todo Agent
 Todo Agent is an agent in a microservice that can invoke Checkmate for to-do list management. The Todo Agent is not only a passive list-keeper, it is also an intelligent assistant agent to help guide the user to extract new tasks, organise and summarise task status.
