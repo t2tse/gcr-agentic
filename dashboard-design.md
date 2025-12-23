@@ -24,7 +24,7 @@ Based on the high-level requirements, the Dashboard UI includes:
 ## 4. User Journey & Sequence Diagrams
 
 ### Journey 1: Loading the Dashboard
-**Goal**: User logs in and sees their personalized dashboard with data from multiple microservices.
+**User Story**: As a user, I want to see a personalized dashboard with aggregated data from all my apps, so that I can start my day with a clear overview.
 
 **Acceptance Criteria**:
 1.  **Personalization**:
@@ -72,7 +72,7 @@ sequenceDiagram
 ```
 
 ### Journey 2: Quick Action - Quick Add Task
-**Goal**: User clicks "Quick Add" to add a task. User can optionally select a specific list, otherwise it defaults to "Inbox" (or system default).
+**User Story**: As a user, I want to quickly add a task from the dashboard without switching context, so that I can capture ideas immediately.
 
 **Acceptance Criteria**:
 1.  **Modal Behavior**:

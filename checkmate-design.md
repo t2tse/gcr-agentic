@@ -41,7 +41,7 @@ The frontend interacts with the backend via the following RESTful endpoints:
 ## 5. User Journeys & Sequence Diagrams
 
 ### Journey 1: Loading the Checkmate Dashboard
-**Goal**: User opens the Checkmate page. The system must load user-defined lists for the sidebar and the default view of tasks (e.g., "All Tasks" or "Inbox").
+**User Story**: As a user, I want to see my lists and tasks immediately upon opening the app, so that I can quickly understand what I need to do today.
 
 **Acceptance Criteria**:
 1.  **Sidebar Loading**:
@@ -87,7 +87,7 @@ sequenceDiagram
 ```
 
 ### Journey 2: Creating a New Task
-**Goal**: User adds a new task, for example, "Buy Milk" to the "Personal" list with "High" priority.
+**User Story**: As a user, I want to quickly add a new task with details like priority and list, so that I never forget an important action item.
 
 **Acceptance Criteria**:
 1.  **Input Validation**:
@@ -100,6 +100,8 @@ sequenceDiagram
 3.  **Data Integrity**:
     *   [ ] The new task MUST be saved with the correct `listId` and `priority`.
     *   [ ] The `userId` MUST be securely attached by the backend (not just trust the frontend).
+    *   [ ] The `createdAt` timestamp MUST be set by the backend.
+    *   [ ] The `dueDate` is optional.
 4.  **Side Effects**:
     *   [ ] The sidebar list count MUST increase by 1.
     *   [ ] The "Total Tasks" stat MUST increase by 1.
@@ -131,7 +133,7 @@ sequenceDiagram
 ```
 
 ### Journey 3: Completing a Task
-**Goal**: User clicks the checkbox to mark a task as "Done".
+**User Story**: As a user, I want to mark tasks as done, so that I can track my progress and feel a sense of accomplishment.
 
 **Acceptance Criteria**:
 1.  **Interaction**:
@@ -169,7 +171,7 @@ sequenceDiagram
 ```
 
 ### Journey 4: Deleting a Task
-**Goal**: User deletes a task.
+**User Story**: As a user, I want to delete tasks that are no longer relevant, so that my list remains clean and focused.
 
 **Acceptance Criteria**:
 1.  **Interaction**:

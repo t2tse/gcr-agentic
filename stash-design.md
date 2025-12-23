@@ -35,7 +35,7 @@ Based on the high-level requirements, the Stash UI supports:
 ## 5. User Journeys & Sequence Diagrams
 
 ### Journey 1: Viewing Stashed Links
-**Goal**: User views their collection of links, potentially filtered by a tag like "AI".
+**User Story**: As a user, I want to browse my saved links and filter them by tags, so that I can easily find the content I need.
 
 **Acceptance Criteria**:
 1.  **Display**:
@@ -67,7 +67,7 @@ sequenceDiagram
 ```
 
 ### Journey 2: Adding a Link (The AI Pipeline)
-**Goal**: User pastes a URL (e.g., specific tech article) and clicks "Add". The system fetches metadata, summarizes it, and tags it.
+**User Story**: As a user, I want to save a URL and have it automatically summarized and tagged, so that I don't have to manually organize my collection.
 
 **Acceptance Criteria**:
 1.  **Input**:
@@ -116,7 +116,7 @@ sequenceDiagram
 ```
 
 ### Journey 3: Loading Stats
-**Goal**: User sees summary statistics like "Total Stashed" and "AI Summarized" on the Stash dashboard.
+**User Story**: As a user, I want to see how many links I've stashed and how many are processed by AI, so that I know the utility of the system.
 
 **Acceptance Criteria**:
 1.  **Accuracy**:
@@ -145,7 +145,7 @@ sequenceDiagram
 ```
 
 ### Journey 4: Deleting a Link
-**Goal**: User removes a saved link from their collection.
+**User Story**: As a user, I want to remove a link I no longer need, so that my collection remains relevant.
 
 **Acceptance Criteria**:
 1.  **Interaction**:
