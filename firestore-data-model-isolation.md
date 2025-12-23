@@ -15,7 +15,7 @@ Each document represents a Todo List (e.g., "Groceries", "Work").
   "id": "auto-generated-id",
   "userId": "firebase-auth-uid",
   "title": "Groceries",
-  "icon": "shopping_cart",
+  "icon": "shopping_cart",            // system pre-defined icons
   "createdAt": "serverTimestamp"
 }
 ```
@@ -25,13 +25,13 @@ Each document represents a Todo item.
 ```json
 {
   "id": "auto-generated-id",
-  "userId": "firebase-auth-uid",  // CRITICAL: The owner of this data
-  "listId": "parent-list-id",     // Reference to checkmate_lists
+  "userId": "firebase-auth-uid",      // CRITICAL: The owner of this data
+  "listId": "parent-list-id",         // Reference to checkmate_lists
   "title": "Buy milk",
-  "description": "Get organic milk from the local store",
-  "status": "todo",       // todo, done 
-  "priority": "high",       // low, medium, high
-  "dueDate": "2024-12-25T00:00:00Z",
+  "description": "Get organic milk from the local store", // optional
+  "status": "todo",                   // allowed values: todo, done 
+  "priority": "high",                 // allowed values: low, medium, high
+  "dueDate": "2024-12-25T00:00:00Z",  // optional
   "createdAt": "serverTimestamp"
 }
 ```
@@ -41,10 +41,10 @@ Each document represents a saved link.
 ```json
 {
   "id": "auto-generated-id",
-  "userId": "firebase-auth-uid",  // CRITICAL: The owner of this data
+  "userId": "firebase-auth-uid",        // CRITICAL: The owner of this data
   "url": "https://example.com/article",
-  "summary": "AI generated summary...",
-  "tags": ["tech", "ai"],
+  "summary": "AI generated summary...", // optional
+  "tags": ["tech", "ai"],               // optional
   "createdAt": "serverTimestamp"
 }
 ```

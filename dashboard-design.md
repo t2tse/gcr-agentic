@@ -26,6 +26,18 @@ Based on the high-level requirements, the Dashboard UI includes:
 ### Journey 1: Loading the Dashboard
 **Goal**: User logs in and sees their personalized dashboard with data from multiple microservices.
 
+**Acceptance Criteria**:
+1.  **Personalization**:
+    *   [ ] The greeting MUST include the authenticated user's first name.
+    *   [ ] If the time is < 12PM, it should say "Good Morning".
+2.  **Aggregated Data**:
+    *   [ ] The "Today's Focus" list MUST show incompletion tasks due today from Checkmate.
+    *   [ ] Checkmate Stats (Remaining tasks) MUST be accurate.
+    *   [ ] Stash Stats (Total links) MUST be displayed.
+3.  **Resilience**:
+    *   [ ] If one service (e.g., Stash) is down, the Dashboard MUST still load the other components (Checkmate) gracefully.
+    *   [ ] Skeleton loaders SHOULD be used during data fetching.
+
 ```mermaid
 sequenceDiagram
     actor User
@@ -60,7 +72,19 @@ sequenceDiagram
 ```
 
 ### Journey 2: Quick Action - Quick Add Task
-**Goal**: User clicks "Quick Add" to add a task. User can optionally select a specific list, otherwise it defaults to "Inbox" (or a user-configured default).
+**Goal**: User clicks "Quick Add" to add a task. User can optionally select a specific list, otherwise it defaults to "Inbox" (or system default).
+
+**Acceptance Criteria**:
+1.  **Modal Behavior**:
+    *   [ ] Clicking "Quick Add" MUST open a modal or popover without navigating away.
+    *   [ ] The modal MUST auto-focus the title input field.
+2.  **List Selection**:
+    *   [ ] A dropdown MUST be available to select the target list.
+    *   [ ] The dropdown MUST default to "Inbox" (or system default).
+3.  **Submission**:
+    *   [ ] Pressing "Enter" MUST submit the task.
+    *   [ ] Upon success, a toast/notification MUST appear, and the modal MUST close.
+    *   [ ] The "Tasks Remaining" counter on the dashboard MUST increment immediately (Optimistic update).
 
 ```mermaid
 sequenceDiagram

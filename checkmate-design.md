@@ -14,9 +14,8 @@ Based on the high-level requirements, the Checkmate UI supports:
     *   Priority (High, Medium, Low)
     *   Due Date
 *   **Controls**:
-    *   Filtering: All, Incomplete, Completed.
+    *   Filtering: All Tasks, Incomplete Only, Completed Only.
     *   Sorting: By Date, Priority.
-    *   Bulk Actions: Delete.
 *   **Quick Add**: Input field for rapid task creation.
 
 ## 3. Architecture & Components
@@ -43,6 +42,20 @@ The frontend interacts with the backend via the following RESTful endpoints:
 
 ### Journey 1: Loading the Checkmate Dashboard
 **Goal**: User opens the Checkmate page. The system must load user-defined lists for the sidebar and the default view of tasks (e.g., "All Tasks" or "Inbox").
+
+**Acceptance Criteria**:
+1.  **Sidebar Loading**:
+    *   [ ] The sidebar MUST display all lists associated with the authenticated user.
+    *   [ ] Each list item MUST show a count of incomplete tasks.
+    *   [ ] If no lists exist, a default "Inbox" list (or system default) should be shown.
+2.  **Task Loading**:
+    *   [ ] The main view MUST display a list of tasks for the default selected list (or "All Tasks").
+    *   [ ] Tasks MUST be sorted by `dueDate` asc and then `createdAt` desc by default.
+    *   [ ] Loading skeletons or spinners MUST be shown while data is fetching.
+3.  **Stats**:
+    *   [ ] "Total Tasks", "Completed", and "Overdue" counters MUST accurately reflect the user's data.
+4.  **Error Handling**:
+    *   [ ] If the API fails, a user-friendly error message ("Failed to load tasks") MUST be displayed.
 
 ```mermaid
 sequenceDiagram
@@ -74,7 +87,24 @@ sequenceDiagram
 ```
 
 ### Journey 2: Creating a New Task
-**Goal**: User adds a new task "Buy Milk" to the "Personal" list with "High" priority.
+**Goal**: User adds a new task, for example, "Buy Milk" to the "Personal" list with "High" priority.
+
+**Acceptance Criteria**:
+1.  **Input Validation**:
+    *   [ ] Task title MUST NOT be empty.
+    *   [ ] If no list is selected, it MUST default to "Inbox" (or system default).
+2.  **Creation Flow**:
+    *   [ ] Clicking "Add Task" (or pressing Enter) MUST send a POST request to the API.
+    *   [ ] The UI MUST be updated immediately (either optimistically or after API response) to show the new task at the top or correct sort position.
+    *   [ ] The input field MUST be cleared after successful submission.
+3.  **Data Integrity**:
+    *   [ ] The new task MUST be saved with the correct `listId` and `priority`.
+    *   [ ] The `userId` MUST be securely attached by the backend (not just trust the frontend).
+4.  **Side Effects**:
+    *   [ ] The sidebar list count MUST increase by 1.
+    *   [ ] The "Total Tasks" stat MUST increase by 1.
+    *   [ ] The "Completed" stat MUST be unchanged.
+    *   [ ] The "Overdue" stat MUST be unchanged unless the new task is overdue.
 
 ```mermaid
 sequenceDiagram
@@ -103,6 +133,21 @@ sequenceDiagram
 ### Journey 3: Completing a Task
 **Goal**: User clicks the checkbox to mark a task as "Done".
 
+**Acceptance Criteria**:
+1.  **Interaction**:
+    *   [ ] Clicking the checkbox MUST visually toggle the state immediately (Optimistic UI).
+    *   [ ] Completed tasks MUST have a visual distinction (e.g., strikethrough text, dimmed color).
+2.  **Persistence**:
+    *   [ ] The change MUST be persisted to the backend via an API call.
+    *   [ ] If filters are set to "Incomplete Only", the task MUST disappear from the view after a short delay or immediately.
+3.  **Reversal**:
+    *   [ ] Clicking a completed checkbox MUST mark the task as incomplete again.
+4.  **Side Effects**:
+    *   [ ] The sidebar list count MUST decrease by 1.
+    *   [ ] The "Total Tasks" stat MUST be unchanged.
+    *   [ ] The "Completed" stat MUST increase by 1.
+    *   [ ] The "Overdue" stat MUST decrease by 1 if the task was overdue.
+
 ```mermaid
 sequenceDiagram
     actor User
@@ -125,6 +170,18 @@ sequenceDiagram
 
 ### Journey 4: Deleting a Task
 **Goal**: User deletes a task.
+
+**Acceptance Criteria**:
+1.  **Interaction**:
+    *   [ ] Clicking the delete icon on the task MUST remove the task from the UI immediately.
+    *   [ ] A confirmation dialog or "Undo" toast MUST be displayed to prevent accidental deletion.
+2.  **Persistence**:
+    *   [ ] The task document MUST be permanently deleted in the backend.
+3.  **Side Effects**:
+    *   [ ] The sidebar list count MUST decrease by 1.
+    *   [ ] The "Total Tasks" stat MUST decrease by 1.
+    *   [ ] The "Completed" stat MUST decrease by 1 if the task was completed.
+    *   [ ] The "Overdue" stat MUST decrease by 1 if the task was overdue.
 
 ```mermaid
 sequenceDiagram
