@@ -43,6 +43,7 @@ Each document represents a saved link.
   "id": "auto-generated-id",
   "userId": "firebase-auth-uid",        // CRITICAL: The owner of this data
   "url": "https://example.com/article",
+  "image": "https://example.com/image.jpg", // optional
   "summary": "AI generated summary...", // optional
   "tags": ["tech", "ai"],               // optional
   "createdAt": "serverTimestamp"
