@@ -30,8 +30,12 @@ Based on the high-level requirements, the Dashboard UI includes:
 1.  **Personalization**:
     *   [ ] The greeting MUST include the authenticated user's first name.
     *   [ ] If the time is < 12PM, it should say "Good Morning".
+    *   [ ] If the time is 12PM - 6PM, it should say "Good Afternoon".
+    *   [ ] If the time is > 6PM, it should say "Good Evening".
 2.  **Aggregated Data**:
     *   [ ] The "Today's Focus" list MUST show incompletion tasks due today from Checkmate.
+    *   [ ] The list items MUST match the Checkmate task UI (priority flags, due dates).
+    *   [ ] The list MUST support inline editing of Title, Description, Priority, and Due Date.
     *   [ ] Checkmate Stats (Remaining tasks) MUST be accurate.
     *   [ ] Stash Stats (Total links) MUST be displayed.
 3.  **Resilience**:
@@ -81,10 +85,12 @@ sequenceDiagram
 2.  **List Selection**:
     *   [ ] A dropdown MUST be available to select the target list.
     *   [ ] The dropdown MUST default to "Inbox" (or system default).
+    *   [ ] The modal MUST allow entering Description (optional), Priority (default Medium), and Due Date (optional).
 3.  **Submission**:
     *   [ ] Pressing "Enter" MUST submit the task.
     *   [ ] Upon success, a toast/notification MUST appear, and the modal MUST close.
     *   [ ] The "Tasks Remaining" counter on the dashboard MUST increment immediately (Optimistic update).
+    *   [ ] The Sidebar task counts (nav) MUST refresh immediately to reflect the new task.
 
 ```mermaid
 sequenceDiagram
@@ -106,7 +112,7 @@ sequenceDiagram
     User->>Frontend: Clicks Save / Hits Enter
     
     Frontend->>Checkmate: POST /tasks
-    Note right of Frontend: Body: { title: "Schedule Dentist", listId: "selected-or-default-id" }
+    Note right of Frontend: Body: { title, description?, listId, priority, dueDate? }
     Checkmate-->>Frontend: Return 201 Created
     
     Frontend->>User: Show Success Toast & Update "Tasks Remaining" Counter
