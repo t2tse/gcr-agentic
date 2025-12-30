@@ -7,13 +7,21 @@ Checkmate provides users with a comprehensive interface to manage tasks, organiz
 
 ## 2. User Interface Design Scope
 Based on the high-level requirements, the Checkmate UI supports:
-*   **Sidebar**: Navigation for "Lists" with task counts.
+*   **Sidebar**: Navigation for "Lists" with real-time task counts.
+    *   **Inbox**: Default list with a persistent task count badge.
+    *   **Custom Lists**: User-created lists with task count badges.
+    *   **Selection State**: Correctly highlights the active list based on URL parameters.
 *   **Task List View**: Main area showing tasks with:
     *   Checkbox (Status toggle)
     *   Title & Description
     *   Priority (High, Medium, Low)
     *   Due Date
     *   **Inline Editing**: Pencil icon to toggle edit mode for Title, Description, Priority, and Due Date.
+*   **List Management Controls**:
+    *   **Dropdown Menu** (for custom lists):
+        *   **Clear List**: Remove all completed/incomplete tasks in the list.
+        *   **Delete List**: Permanently remove the list and all its tasks.
+    *   *Note: "Inbox" cannot be deleted or renamed.*
 *   **Controls**:
     *   Filtering: All Tasks, Incomplete Only, Completed Only.
     *   Sorting: By Date, Priority.
@@ -21,18 +29,26 @@ Based on the high-level requirements, the Checkmate UI supports:
 
 ## 3. Architecture & Components
 *   **Frontend**: Next.js Page (`/checkmate`) calling Backend APIs.
-*   **Backend**: NestJS Service (`CheckmateService`).
+    *   **State Management**: `ListsContext` (React Context) manages global list state (lists, inboxCount) to ensure the Sidebar stays synchronized with the main view without page reloads.
+*   **Backend**: NestJS Service (`CheckmateService`, `ListsService`).
 *   **Database**: Google Cloud Firestore.
     *   Collection: `checkmate_lists`
     *   Collection: `checkmate_tasks`
 *   **Security**: Firebase Auth Token validation; Data isolation via `userId`.
+*   **Inbox Filtering**: Backend strictly filters Inbox tasks (where `listId` is null/undefined) to prevent data leaking from other lists.
 
 ## 4. API Endpoints
 The frontend interacts with the backend via the following RESTful endpoints:
 
 | Method | Endpoint | Description | Query Params |
 | :--- | :--- | :--- | :--- |
-| `GET` | `/api/checkmate/lists` | Fetch all lists for sidebar | - |
+| Method | Endpoint | Description | Query Params |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/checkmate/lists` | Fetch lists and `inboxCount` | - |
+| `POST` | `/api/checkmate/lists` | Create a new list | - |
+| `PATCH` | `/api/checkmate/lists/:id` | Update list (title, icon) | - |
+| `DELETE` | `/api/checkmate/lists/:id` | Delete a list (and cascading tasks) | - |
+| `DELETE` | `/api/checkmate/lists/:id/tasks` | Clear all tasks in a list | - |
 | `GET` | `/api/checkmate/tasks` | Fetch tasks | `listId`, `status`, `sort` |
 | `POST` | `/api/checkmate/tasks` | Create a new task | - |
 | `PATCH` | `/api/checkmate/tasks/:id` | Update task (status, etc.) | - |
@@ -69,9 +85,10 @@ sequenceDiagram
     
     par Load Lists
         Frontend->>API: GET /lists
-        API->>DB: Query checkmate_lists (where userId == uid)
-        DB-->>API: Return Lists
-        API-->>Frontend: Return List JSON [ {id, title, count...} ]
+        API->>DB: Query checkmate_lists + Count 'inbox' tasks
+        DB-->>API: Return Lists & Task Data
+        API-->>Frontend: Return { lists: [...], inboxCount: 5 }
+        Frontend->>User: Renders Sidebar with Counts & Inbox Badge
     and Load Default Tasks
         Frontend->>API: GET /tasks?limit=50&sort=date
         API->>DB: Query checkmate_tasks (where userId == uid)
@@ -240,4 +257,53 @@ sequenceDiagram
     
     API-->>Frontend: Return Updated Task
     Frontend->>User: Reverts to View Mode with new data
+```
+
+### Journey 6: List Management (Clear/Delete)
+**User Story**: As a user, I want to keep my sidebar organized by removing old lists or bulk-clearing completed tasks.
+
+**Acceptance Criteria**:
+1.  **Clear List**:
+    *   [ ] "Clear List" removes ALL tasks in the current list.
+    *   [ ] A confirmation modal MUST be shown.
+    *   [ ] The sidebar task count for that list MUST reset to 0 immediately.
+    *   [ ] "Inbox" can be cleared.
+2.  **Delete List**:
+    *   [ ] "Delete List" removes the list and ALL its tasks.
+    *   [ ] A confirmation modal MUST be shown.
+    *   [ ] The user MUST be redirected to "Inbox" if the deleted list was active.
+    *   [ ] The list MUST disappear from the sidebar immediately.
+    *   [ ] "Inbox" CANNOT be deleted.
+3.  **Synchronization**:
+    *   [ ] All actions MUST trigger a `refreshLists()` context update to ensure the Sidebar stays in sync.
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant Frontend as Next.js (CheckmatePage)
+    participant Context as ListsContext
+    participant API as Backend (NestJS)
+    participant DB as Firestore
+
+    alt Clear List
+        User->>Frontend: Selects "Clear List" -> Confirms
+        Frontend->>API: DELETE /lists/:id/tasks
+        API->>DB: Query tasks where listId == id
+        DB-->>API: Task Docs
+        API->>DB: Batch Delete Tasks
+        API-->>Frontend: Success (200 OK)
+        Frontend->>Context: refreshLists()
+        Context->>API: GET /lists
+        API-->>Context: Return updated counts
+        Context-->>Frontend: Sidebar updates (count -> 0)
+        Frontend->>User: Shows empty list
+    else Delete List
+        User->>Frontend: Selects "Delete List" -> Confirms
+        Frontend->>API: DELETE /lists/:id
+        API->>DB: Delete List Doc & Cascading Tasks
+        API-->>Frontend: Success (200 OK)
+        Frontend->>User: Redirects to /checkmate (Inbox)
+        Frontend->>Context: refreshLists()
+        Context-->>Frontend: Sidebar updates (List removed)
+    end
 ```
