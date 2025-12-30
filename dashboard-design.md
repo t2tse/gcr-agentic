@@ -36,6 +36,8 @@ Based on the high-level requirements, the Dashboard UI includes:
     *   [ ] The "Today's Focus" list MUST show incompletion tasks due today from Checkmate.
     *   [ ] The list items MUST match the Checkmate task UI (priority flags, due dates).
     *   [ ] The list MUST support inline editing of Title, Description, Priority, and Due Date.
+    *   [ ] The list MUST provide sorting options: Oldest Due Date, Priority (High-Low), Newest Created, Oldest Created.
+    *   [ ] The sorting UI MUST use a custom dropdown style (white box) consistent with Stash and Checkmate.
     *   [ ] Checkmate Stats (Remaining tasks) MUST be accurate.
     *   [ ] Stash Stats (Total links) MUST be displayed.
 3.  **Resilience**:

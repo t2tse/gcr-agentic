@@ -23,13 +23,16 @@ Based on the high-level requirements, the Checkmate UI supports:
         *   **Delete List**: Permanently remove the list and all its tasks.
     *   *Note: "Inbox" cannot be deleted or renamed.*
 *   **Controls**:
-    *   Filtering: All Tasks, Incomplete Only, Completed Only.
-    *   Sorting: By Date, Priority.
-*   **Quick Add**: Input field for rapid task creation.
+    *   **Filtering**: Dropdown with options: "All Tasks", "Incomplete", "Completed".
+    *   **Sorting**: Dropdown with options: "Oldest Due Date", "Priority (High-Low)", "Newest Created", "Oldest Created".
+    *   **Quick Add**: Input field for rapid task creation with default "Medium" priority.
 
 ## 3. Architecture & Components
 *   **Frontend**: Next.js Page (`/checkmate`) calling Backend APIs.
-    *   **State Management**: `ListsContext` (React Context) manages global list state (lists, inboxCount) to ensure the Sidebar stays synchronized with the main view without page reloads.
+    *   **State Management**: `ListsContext` (React Context) manages global list state (lists, inboxCount) to ensure the Sidebar stays synchronized.
+    *   **Styling**:
+        *   Priority Colors: High (Red), Medium (Amber/Yellow), Low (Green).
+        *   Consistent "White Box" styling for control dropdowns (Sort/Filter).
 *   **Backend**: NestJS Service (`CheckmateService`, `ListsService`).
 *   **Database**: Google Cloud Firestore.
     *   Collection: `checkmate_lists`
@@ -67,7 +70,8 @@ The frontend interacts with the backend via the following RESTful endpoints:
     *   [ ] If no lists exist, a default "Inbox" list (or system default) should be shown.
 2.  **Task Loading**:
     *   [ ] The main view MUST display a list of tasks for the default selected list (or "All Tasks").
-    *   [ ] Tasks MUST be sorted by `dueDate` asc and then `createdAt` desc by default.
+    *   [ ] Tasks MUST be sorted by `dueDate` asc by default.
+    *   [ ] The UI MUST provide a sorting dropdown with options: Oldest Due Date, Priority (High-Low), Newest Created, Oldest Created.
     *   [ ] Loading skeletons or spinners MUST be shown while data is fetching.
 3.  **Stats**:
     *   [ ] "Total Tasks", "Completed", and "Overdue" counters MUST accurately reflect the user's data.
