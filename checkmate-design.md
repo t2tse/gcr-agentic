@@ -13,6 +13,7 @@ Based on the high-level requirements, the Checkmate UI supports:
     *   Title & Description
     *   Priority (High, Medium, Low)
     *   Due Date
+    *   **Inline Editing**: Pencil icon to toggle edit mode for Title, Description, Priority, and Due Date.
 *   **Controls**:
     *   Filtering: All Tasks, Incomplete Only, Completed Only.
     *   Sorting: By Date, Priority.
@@ -202,4 +203,41 @@ sequenceDiagram
     DB-->>API: Success
     
     API-->>Frontend: Return Success (204 No Content)
+```
+
+### Journey 5: Inline Task Editing
+**User Story**: As a user, I want to edit task details (Title, Description, Priority, Due Date) directly in the list, so that I can quickly correct mistakes or update plans without leaving the view.
+
+**Acceptance Criteria**:
+1.  **Interaction**:
+    *   [ ] Clicking the **Pencil Icon** on a task row MUST replace the static text with input fields.
+    *   [ ] The form MUST populate with existing values for Title, Description, Priority, and Due Date.
+    *   [ ] Clicking "Save" (Check) MUST submit the changes and revert to view mode.
+    *   [ ] Clicking "Cancel" (X) MUST revert to view mode without saving.
+2.  **Persistence**:
+    *   [ ] Updates MUST be persisted to the backend via `PATCH /tasks/:id`.
+3.  **Validation**:
+    *   [ ] Title MUST NOT be empty.
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant Frontend as Next.js Client
+    participant API as Checkmate Service (NestJS)
+    participant DB as Firestore
+
+    User->>Frontend: Clicks Pencil Icon
+    Frontend->>User: Renders Edit Form in-place
+
+    User->>Frontend: Updates Title, Due Date
+    User->>Frontend: Clicks Save
+
+    Frontend->>API: PATCH /tasks/{taskId}
+    Note right of Frontend: Body: { title: "New Title", dueDate: "..." }
+
+    API->>DB: Update document
+    DB-->>API: Success
+    
+    API-->>Frontend: Return Updated Task
+    Frontend->>User: Reverts to View Mode with new data
 ```
