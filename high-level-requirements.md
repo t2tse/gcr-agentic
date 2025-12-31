@@ -74,7 +74,8 @@ Todo Agent is an agent in a microservice that can invoke Checkmate for to-do lis
 *   Built using **Agent Development Kit ADK (Python)**.
 *   Exposed via A2A (Agent-to-Agent) interfaces.
 *   Invokes Checkmate for read/write operations via MCP (Model Context Protocol)
-*   Uses **Gemini API** to process natural language input and break it down into tasks.
+*   Uses **Gemini API** for core reasoning in ADK.
+*   Uses **Gemini API** to process natural language input, then break it down into tasks, organise into the most relevant task list, set priority and due date according to user needs.
 
 ## Personal Assistant Agent
 Personal Assistant Agent is a root orchestration agent in a microservice that can interact with Checkmate and Stash.
@@ -84,6 +85,7 @@ Personal Assistant Agent is a root orchestration agent in a microservice that ca
 *   Exposed via A2A (Agent-to-Agent) interfaces.
 *   Interacts with the Checkmate Agent as a remote A2A agent.
 *   Invokes Stash for read/write operations via MCP (Model Context Protocol)
+*   Uses **Gemini API** for core reasoning in ADK.
 
 ## SaaS Portal
 A landing web page for each authenticated user connecting Checkmate, Stash and Personal Assistant Agent microservices.
@@ -133,7 +135,8 @@ graph TD
     end
 
     subgraph "AI Services"
-        TodoAgent -->|Process Text| Gemini[Gemini API]
+        TodoAgent -->|Reasoning and Process Text| Gemini[Gemini API]
+        PAA -->|Reasoning| Gemini
         StashAPI -->|Summarize| Gemini
     end
 
