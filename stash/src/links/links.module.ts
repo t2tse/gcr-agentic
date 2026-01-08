@@ -8,5 +8,6 @@ import { GeminiService } from '../gemini/gemini.service';
     imports: [FirestoreModule],
     controllers: [LinksController],
     providers: [LinksService, GeminiService],
+    exports: [LinksService],
 })
 export class LinksModule { }
