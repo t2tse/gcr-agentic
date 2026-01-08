@@ -7,6 +7,6 @@ import { FirestoreModule } from '../firestore/firestore.module';
     imports: [FirestoreModule],
     controllers: [ListsController],
     providers: [ListsService],
-    exports: [ListsService] // Export if TasksModule needs it later
+    exports: [ListsService]
 })
 export class ListsModule { }

@@ -149,9 +149,17 @@ export class TasksService {
             const tasks = snapshot.docs.map(d => d.data());
             const total = tasks.length;
             const completed = tasks.filter(t => t.status === 'done').length;
-            // Overdue logic requires date parsing which might be complex with simple strings
-            // keeping it simple for now
-            return { total, completed, remaining: total - completed };
+
+            const now = new Date();
+            const overdue = tasks.filter(t => {
+                if (t.status === 'done' || !t.dueDate) return false;
+                const dueDate = new Date(t.dueDate);
+                return dueDate < now;
+            }).length;
+
+            const remaining = total - completed;
+
+            return { total, completed, remaining, overdue };
         } catch (error) {
             this.logger.error('Error in getStats', error);
             throw error;

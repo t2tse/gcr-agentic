@@ -7,5 +7,6 @@ import { FirestoreModule } from '../firestore/firestore.module';
     imports: [FirestoreModule],
     controllers: [TasksController],
     providers: [TasksService],
+    exports: [TasksService]
 })
 export class TasksModule { }
