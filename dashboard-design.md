@@ -10,7 +10,7 @@ Based on the high-level requirements, the Dashboard UI includes:
 *   **Greeting**: Personalized message ("Good Morning, [Name]") + Task Summary count.
 *   **Quick Actions**: Buttons for "Quick Add Task", "Stash Link".
 *   **Today's Focus**: List of high-priority/due-today tasks (from Checkmate).
-*   **Statistics**: Progress bars (Completion rates).
+*   **Statistics**: Progress bars (Completion rates) and Overdue Task Count.
 *   **Navigation**: Links to Checkmate, Stash, and Settings.
 
 ## 3. Architecture & Components
@@ -38,7 +38,7 @@ Based on the high-level requirements, the Dashboard UI includes:
     *   [ ] The list MUST support inline editing of Title, Description, Priority, and Due Date.
     *   [ ] The list MUST provide sorting options: Oldest Due Date, Priority (High-Low), Newest Created, Oldest Created.
     *   [ ] The sorting UI MUST use a custom dropdown style (white box) consistent with Stash and Checkmate.
-    *   [ ] Checkmate Stats (Remaining tasks) MUST be accurate.
+    *   [ ] Checkmate Stats (Remaining tasks, Overdue tasks) MUST be accurate.
     *   [ ] Stash Stats (Total links) MUST be displayed.
 3.  **Resilience**:
     *   [ ] If one service (e.g., Stash) is down, the Dashboard MUST still load the other components (Checkmate) gracefully.
@@ -66,8 +66,8 @@ sequenceDiagram
         Frontend->>User: Render "Today's Focus" List
     and Fetch Task Stats
         Frontend->>Checkmate: GET /stats
-        Checkmate-->>Frontend: Return { total, completed, remaining }
-        Frontend->>User: Render Progress Bar & "You have X tasks remaining"
+        Checkmate-->>Frontend: Return { total, completed, remaining, overdue }
+        Frontend->>User: Render Progress Bar & "You have X tasks remaining" & Overdue Count
     and Fetch Stash Stats
         Frontend->>Stash: GET /stats
         Stash-->>Frontend: Return { totalStashed, aiSummarized }

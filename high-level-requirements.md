@@ -25,7 +25,7 @@ The Dashboard serves as the landing page, providing an aggregated view of the us
 *   **Greeting**: "Good Morning/Afternoon/Evening, [User Name]" with a summary of remaining tasks ("You have X tasks remaining for today").
 *   **Quick Actions**: Prominent buttons (e.g., "Quick Add").
 *   **Today's Focus**: A list of high-priority tasks due today, showing title, time/location, priority ("High", "Medium", "Low"), and status.
-*   **Statistics**: Visual progress indicators (e.g., "85% Completion").
+*   **Statistics**: Visual progress indicators (e.g., "85% Completion") and "Overdue Tasks" count.
 *   **Navigation**: Easy access to Checkmate Todo, Stash Links, and Settings.
 
 ## Checkmate (Task Management)
