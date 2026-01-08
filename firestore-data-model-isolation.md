@@ -106,8 +106,13 @@ service cloud.firestore {
 
 The application (the "Authorized User") must act on behalf of the user.
 
-1.  **Authentication**: The Frontend (SaaS Portal) sends a Firebase ID Token.
-2.  **Guard**: Middleware/Guard uses **Firebase Admin SDK** (`admin.auth().verifyIdToken(token)`) to verify the ID token and decode the UID.
+1.  **Authentication**: 
+    *   **Frontend (Portal)**: Sends a **Firebase ID Token**.
+    *   **MCP Client (Agent)**: Sends a **Google Access Token**.
+2.  **Guard**: Middleware/Guard validates the token:
+    *   **Firebase ID Token**: Verified using `admin.auth().verifyIdToken()`.
+    *   **Google Access Token**: Verified using `GoogleAuth` library. Returns a Google User ID, which is then mapped to a Firebase UID via `admin.auth().getUserByProviderUid()`.
+    *   **Result**: Regardless of token type, the Guard resolves a consistent `userId` (Firebase UID).
 3.  **Repository/Service**:
     *   **Writes**: Automatically inject `userId` into the DTO before saving.
     *   **Reads**: Always append `.where('userId', '==', uid)` to every query. 

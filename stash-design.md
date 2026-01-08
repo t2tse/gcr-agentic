@@ -17,7 +17,7 @@ Based on the high-level requirements, the Stash UI supports:
 
 ## 3. Architecture & Components
 *   **Frontend**: Next.js Page (`/stash`).
-*   **Backend**: NestJS Service (`StashService`).
+*   **Backend**: NestJS Service (`StashService`, `McpService`).
 *   **AI Service**: Google Gemini API (via direct integration in Backend).
 *   **Database**: Google Cloud Firestore.
     *   Collection: `stash_links`
@@ -31,6 +31,8 @@ Based on the high-level requirements, the Stash UI supports:
 | `POST` | `/api/stash/links` | Add a new link (triggers AI pipeline) | - |
 | `DELETE` | `/api/stash/links/:id` | Delete a link | - |
 | `GET` | `/api/stash/stats` | Fetch usage stats | - |
+| `ALL` | `/mcp` | Unified MCP Endpoint (SSE & JSON-RPC) | `sessionId` |
+| `GET` | `/.well-known/oauth-protected-resource` | OAuth 2.0 Discovery Metadata | - |
 
 ## 5. User Journeys & Sequence Diagrams
 

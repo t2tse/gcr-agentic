@@ -16,6 +16,7 @@ The complete solution consists of these microservices components:
 *   **Database**: Google Cloud Firestore (NoSQL)
 *   **Authentication**: Firebase Authentication
 *   **AI Models**: Google Gemini API
+*   **MCP**: Model Context Protocol SDK (`@modelcontextprotocol/sdk`)
 
 
 # UI Design Requirements
@@ -56,6 +57,8 @@ A simple to-do or grocery checklist microservice. The todo list keep track of th
 *   Built using **NestJS**.
 *   Data is stored in **Firestore**.
 *   Exposed as a RESTful API.
+*   **MCP Server**: Exposed as an MCP Server via **StreamableHTTPServerTransport** (Unified `/mcp` endpoint).
+*   **Dual Authentication**: Supports both Firebase ID Tokens (for Portal) and Google Access Tokens (for Agents).
 
 ## Stash 
 A Personal Link Aggregator microservice to save and categorize web links. Categories are implemented via **tags**.
@@ -64,6 +67,8 @@ A Personal Link Aggregator microservice to save and categorize web links. Catego
 *   Built using **NestJS**.
 *   Data is stored in **Firestore**.
 *   Exposed as a RESTful API.
+*   **MCP Server**: Exposed as an MCP Server via **StreamableHTTPServerTransport** (Unified `/mcp` endpoint).
+*   **Dual Authentication**: Supports both Firebase ID Tokens (for Portal) and Google Access Tokens (for Agents).
 *   **Processing Pipeline**: Fetches content from the URL -> Sends to **Gemini API** for summarization and tagging -> Saves metadata to Firestore.
 *   **Data Structure**: Must support `tags` (for categorization) and `summary` (nullable, for AI stats).
 
@@ -96,7 +101,7 @@ A landing web page for each authenticated user connecting Checkmate, Stash and P
 *   **Data Isolation**: Enforces strict user-level data isolation.
 *   **Component Interaction**:
     *   **Direct Access**: Portal connects directly to Checkmate API and Stash API for standard CRUD operations (high performance).
-    *   **Agentic Access**: Portal connects to Personal Assistant Agent for complex, multi-step orchestration tasks. The Agent then communicates with the remote Todo Agent and Stash.
+    *   **Agentic Access**: Portal connects to Personal Assistant Agent for complex, multi-step orchestration tasks. The Agent then communicates with the remote Todo Agent and Stash via **MCP**.
 
 
 # Non-Functional Requirements

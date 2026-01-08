@@ -33,7 +33,7 @@ Based on the high-level requirements, the Checkmate UI supports:
     *   **Styling**:
         *   Priority Colors: High (Red), Medium (Amber/Yellow), Low (Green).
         *   Consistent "White Box" styling for control dropdowns (Sort/Filter).
-*   **Backend**: NestJS Service (`CheckmateService`, `ListsService`).
+*   **Backend**: NestJS Service (`CheckmateService`, `ListsService`, `McpService`).
 *   **Database**: Google Cloud Firestore.
     *   Collection: `checkmate_lists`
     *   Collection: `checkmate_tasks`
@@ -57,6 +57,8 @@ The frontend interacts with the backend via the following RESTful endpoints:
 | `PATCH` | `/api/checkmate/tasks/:id` | Update task (status, etc.) | - |
 | `DELETE` | `/api/checkmate/tasks/:id` | Delete a task | - |
 | `GET` | `/api/checkmate/stats` | Fetch summary stats | - |
+| `ALL` | `/mcp` | Unified MCP Endpoint (SSE & JSON-RPC) | `sessionId` |
+| `GET` | `/.well-known/oauth-protected-resource` | OAuth 2.0 Discovery Metadata | - |
 
 ## 5. User Journeys & Sequence Diagrams
 
