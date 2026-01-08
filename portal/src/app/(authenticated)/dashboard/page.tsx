@@ -357,6 +357,14 @@ export default function DashboardPage() {
                             <span className="text-2xl font-bold text-slate-900 dark:text-white">{completionRate}%</span>
                             <span className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Completion</span>
                         </div>
+
+                        <div className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col items-center justify-center text-center gap-2">
+                            <div className="h-10 w-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-600 mb-1">
+                                <span className="material-symbols-outlined">warning</span>
+                            </div>
+                            <span className="text-2xl font-bold text-slate-900 dark:text-white">{taskStats?.overdue || 0}</span>
+                            <span className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Overdue</span>
+                        </div>
                     </div>
                 </div>
             </div>
