@@ -143,3 +143,7 @@ vite.config.ts.timestamp-*
 
 # GitHub App credentials
 gha-creds-*.json
+
+# Google Cloud credentials
+client_secret.json
+token.json
