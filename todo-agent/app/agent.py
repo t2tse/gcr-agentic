@@ -60,7 +60,7 @@ todo_agent = Agent(
         - Infer priority (HIGH, MEDIUM, LOW) from context (e.g., "urgent" -> HIGH).
         - Default to LOW or MEDIUM if neutral.
     4. **Output**:
-        - Confirm actions concisely.
+        - **Always Confirm**: Explicitly confirm to the user when an action (create, update, delete) is completed successfully. Do not rely on tool results alone; the user must see a verbal confirmation.
         - If listing tasks, present them clearly.
 
     ### Tools
