@@ -9,9 +9,17 @@ from urllib.parse import urlparse, parse_qs
 
 # SDK imports
 from a2a.client.client_factory import ClientFactory
-from a2a.client.client import ClientConfig
-from a2a.types import Message, Part, TextPart, Role
+from a2a.client.client import ClientConfig, ClientCallInterceptor, Consumer, ClientCallContext
+from a2a.client.auth import AuthInterceptor
+from a2a.types import Message, Part, TextPart, Role, AgentCard, HTTPAuthSecurityScheme, OAuth2SecurityScheme, OpenIdConnectSecurityScheme
 from a2a.utils.message import get_message_text
+from a2a.client.auth.credentials import CredentialService
+from typing import Optional, Any
+import logging
+
+# Configure logger
+logging.basicConfig(level=logging.WARNING)
+logger = logging.getLogger(__name__)
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -77,35 +85,95 @@ def get_credentials():
         with open("token.json", "w") as token:
             token.write(creds.to_json())
     return creds
+    return creds
 
+class SimpleCredentialService(CredentialService):
+    """Simple service to provide the already-fetched token."""
+    def __init__(self, token: str):
+        self._token = token
+
+    async def get_credentials(
+        self, scheme_name: str, context: Optional[ClientCallContext] = None
+    ) -> Optional[Any]:
+        # Return the token for any scheme supported by AuthInterceptor (Bearer/OAuth2)
+        return self._token
 async def main():
     print("Starting A2A Client...")
     
-    # 1. Authenticate with Google
+    # 0. Fetch Agent Card to check security requirements
+    print(f"Fetching public Agent Card from {AGENT_URL}/.well-known/agent-card.json...")
     try:
-        creds = get_credentials()
-        # Verify valid after retrieval/refresh
-        if not creds.valid:
-             creds.refresh(Request())
-             # Save refreshed token
-             with open("token.json", "w") as token:
-                token.write(creds.to_json())
-                
-        print(f"Google OAuth 2.0 Authenticated as: {creds.token[:10]}...") 
+        async with httpx.AsyncClient(timeout=10.0) as ac:
+            resp = await ac.get(f"{AGENT_URL}/.well-known/agent-card.json")
+            resp.raise_for_status()
+            card_data = resp.json()
+            # Basic validation
+            if not isinstance(card_data, dict):
+                 raise ValueError("Invalid Agent Card format")
+            
+            # Check for security schemes
+            security_schemes = card_data.get("securitySchemes", {})
+            security_reqs = card_data.get("security", [])
+            
+            needs_auth = False
+            if security_schemes:
+                # Check if any requirement actually uses a defined scheme
+                # A requirement is a dict like {"scheme_name": [scopes]}
+                # If ANY requirement is satisfiable, we might need auth.
+                # Simplification: If there are ANY security schemes defined and ANY security requirements, assume we need auth.
+                # A2A spec implies if 'security' list is present and not empty, auth is required/optional.
+                # If 'security' is [{"oauth2": []}], then it is required.
+                if security_reqs: 
+                    needs_auth = True
+                    print(f"Agent requires authentication. Schemes found: {list(security_schemes.keys())}")
+                else:
+                    print("Agent defines security schemes but lists no requirements. Treating as public.")
+            else:
+                 print("Agent is public (no security schemes defined).")
+
     except Exception as e:
-        print(f"Authentication failed: {e}")
-        return
+        print(f"Failed to fetch/parse Agent Card: {e}")
+        # Fallback: Assume no auth or let ClientFactory handle the error later
+        needs_auth = False
+
+    interceptor = None
+    creds = None
+    
+    # 1. Authenticate with Google (if needed)
+    if needs_auth:
+        try:
+            creds = get_credentials()
+            # Verify valid after retrieval/refresh
+            if not creds.valid:
+                 creds.refresh(Request())
+                 # Save refreshed token
+                 with open("token.json", "w") as token:
+                    token.write(creds.to_json())
+                    
+            print(f"Google OAuth 2.0 Authenticated as: {creds.token[:10]}...") 
+            
+            credential_service = SimpleCredentialService(creds.token)
+            interceptor = AuthInterceptor(credential_service)
+            
+        except Exception as e:
+            print(f"Authentication failed: {e}")
+            return
+    else:
+        print("Skipping authentication flow.")
 
     # 2. Connect to Agent using ClientFactory
     print(f"Connecting to agent at {AGENT_URL}...")
     try:
-        httpx_client = httpx.AsyncClient(
-            headers={"Authorization": f"Bearer {creds.token}"},
-            timeout=30.0
-        )
-        
+        httpx_client = httpx.AsyncClient(timeout=30.0)
         client_config = ClientConfig(httpx_client=httpx_client)
-        client = await ClientFactory.connect(AGENT_URL, client_config=client_config)
+        
+        interceptors = [interceptor] if interceptor else []
+        
+        client = await ClientFactory.connect(
+            AGENT_URL, 
+            client_config=client_config,
+            interceptors=interceptors
+        )
         print("Connected to agent!")
     except Exception as e:
         print(f"Failed to connect to agent: {e}")
@@ -142,7 +210,12 @@ async def main():
                     try:
                         print("Fetching Extended Agent Card...")
                         ext_url = f"{AGENT_URL}/agent/authenticatedExtendedCard"
-                        async with httpx.AsyncClient(headers={"Authorization": f"Bearer {creds.token}"}, timeout=10.0) as ac:
+                        
+                        headers = {}
+                        if creds:
+                             headers["Authorization"] = f"Bearer {creds.token}"
+                             
+                        async with httpx.AsyncClient(headers=headers, timeout=10.0) as ac:
                             resp = await ac.get(ext_url)
                             resp.raise_for_status()
                             print(json.dumps(resp.json(), indent=2))
