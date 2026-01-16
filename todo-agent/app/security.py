@@ -11,10 +11,6 @@ import os
 from app.agent import app as adk_app
 from app.context import auth_token_ctx
 
-# Recalculate or import the constant logic. 
-# fast_api_app imports us, so we can't import it.
-A2A_RPC_PATH = f"/a2a/{adk_app.name}"
-
 logger = logging.getLogger(__name__)
 
 class AuthMiddleware(BaseHTTPMiddleware):
@@ -25,9 +21,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
 
     async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
         # Only enforce on A2A RPC endpoints
-        # A2A_RPC_PATH is imported, e.g. "/a2a/app"
-        # We should match strict prefix
-        if request.url.path.startswith(A2A_RPC_PATH):
+        if request.url.path.startswith("/a2a/"):
             # Allow OPTIONS for CORS (handled by CORSMiddleware usually, but good to be safe)
             if request.method == "OPTIONS":
                 return await call_next(request)

@@ -20,7 +20,12 @@ import google.auth
 from a2a.server.apps import A2AFastAPIApplication
 from a2a.server.request_handlers import DefaultRequestHandler
 from a2a.server.tasks import InMemoryTaskStore
-from a2a.types import AgentCapabilities, AgentCard
+from a2a.types import (
+    AgentCapabilities, 
+    AgentCard, 
+    AuthorizationCodeOAuthFlow,
+    OAuth2SecurityScheme
+)
 from a2a.utils.constants import (
     AGENT_CARD_WELL_KNOWN_PATH,
     EXTENDED_AGENT_CARD_PATH,
@@ -72,6 +77,29 @@ async def build_dynamic_agent_card() -> AgentCard:
         capabilities=AgentCapabilities(streaming=True)
     )
     agent_card = await agent_card_builder.build()
+    
+    # Manually add security schemes as builder might not expose them directly yet
+    if not agent_card.security_schemes:
+        agent_card.security_schemes = {
+             "google_oauth": OAuth2SecurityScheme(
+                type="oauth2",
+                description="Google OAuth 2.0",
+                flows={
+                    "authorizationCode": AuthorizationCodeOAuthFlow(
+                        authorizationUrl="https://accounts.google.com/o/oauth2/v2/auth",
+                        tokenUrl="https://oauth2.googleapis.com/token",
+                        scopes={
+                            "openid": "OpenID Connect",
+                            "email": "Email",
+                            "profile": "Profile"
+                        }
+                    )
+                }
+             )
+        }
+    if not agent_card.security:
+        agent_card.security = [{"google_oauth": []}]
+        
     return agent_card
 
 
@@ -104,7 +132,25 @@ async def lifespan(app_instance: FastAPI) -> AsyncIterator[None]:
             defaultInputModes=["text/plain"],
             defaultOutputModes=["text/plain"],
             capabilities=AgentCapabilities(streaming=True),
-            supports_authenticated_extended_card=True
+            supports_authenticated_extended_card=True,
+            security_schemes={
+                "google_oauth": OAuth2SecurityScheme(
+                    type="oauth2",
+                    description="Google OAuth 2.0",
+                    flows={
+                        "authorizationCode": AuthorizationCodeOAuthFlow(
+                            authorizationUrl="https://accounts.google.com/o/oauth2/v2/auth",
+                            tokenUrl="https://oauth2.googleapis.com/token",
+                            scopes={
+                                "openid": "OpenID Connect",
+                                "email": "Email",
+                                "profile": "Profile"
+                            }
+                        )
+                    }
+                )
+            },
+            security=[{"google_oauth": []}]
         )
 
     a2a_app = A2AFastAPIApplication(
