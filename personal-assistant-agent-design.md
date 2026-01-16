@@ -17,7 +17,7 @@ graph TD
     end
     
     subgraph "Remote Agent"
-        PAA -->|A2A RPC + OAuth| TodoAgent[Todo Agent]
+        PAA -->|A2A RPC + OAuth| TodoAgent["Todo Agent (RemoteA2aAgent)"]
         TodoAgent -->|MCP Protocol| Checkmate[Checkmate Service]
     end
 ```
@@ -41,12 +41,11 @@ The Personal Assistant Agent is defined as an `LlmAgent` in the ADK. It serves a
         -   `get_links`: Retrieve saved links (supporting filters/tags).
         -   `get_stats`: Retrieve usage statistics.
 
-2.  **Todo Agent Client (A2A Tool)**:
-    -   **Implementation**: Uses `a2a.client.ClientFactory` to create a client instance.
-    -   **Transport**: JSON-RPC via HTTP (A2A Standard).
-    -   **Capabilities**:
-        -   Invokes the remote `todo_agent` to handle task-related intents.
-    -   **Authentication**: Implements **Credential Forwarding**. The PAA retrieves the bearer token from the incoming A2A request context and uses it to authenticate the outbound call to the Todo Agent. This preserves the user identity context.
+2.  **Todo Agent (Remote Agent)**:
+    -   **Implementation**: `RemoteA2aAgent` from ADK.
+    -   **Transport**: A2A RPC Protocol.
+    -   **Integration**: Registered as a **sub-agent** of the PAA.
+    -   **Authentication**: Uses `auth.header_provider` to forward the bearer token from the incoming request context to the remote agent call.
 
 3.  **Standard Tools**:
     -   `get_current_time`: For context awareness.
@@ -54,12 +53,12 @@ The Personal Assistant Agent is defined as an `LlmAgent` in the ADK. It serves a
 ### 3.3 Instruction Strategy
 The system instruction will focus on **Intent Routing**:
 *   **Link/Stash managed by Stash**: Requests involving "saving links", "bookmarks", "reading list" -> Route to `StashMcp`.
-*   **Tasks/Todos managed by Todo Agent**: Requests involving "reminders", "tasks", "to-do", "shopping list" -> Route to `TodoAgentClient`.
+*   **Tasks/Todos managed by Todo Agent**: delegated to `todo_agent`.
 *   **Hybrid Requests**: Break down complex requests.
     *   *Example*: "Save this article and remind me to read it tomorrow."
     *   *Action*:
         1. Call `StashMcp.save_link(url)`.
-        2. Call `TodoAgentClient.process(instruction="Remind me to read the article '{title}' tomorrow")`.
+        2. Delegate task creation request to `todo_agent`.
 
 ## 4. Sequence Diagram: Hybrid User Journey
 
@@ -93,7 +92,7 @@ sequenceDiagram
 The implementation will principally involve `app/agent.py` in the `personal-assistant` microservice:
 
 1.  **Stash Integration**: Initialize `McpToolset` with `SseConnectionParams` pointing to the Stash service URL (`STASH_MCP_URL`).
-2.  **Todo Agent Integration**: Implement `ClientFactory` with `AuthInterceptor` to invoke the remote Todo Agent.
+2.  **Todo Agent Integration**: Implement `RemoteA2aAgent` pointing to `TODO_AGENT_URL`. Add it to `sub_agents` list of PAA.
 3.  **Authentication**: Ensure the PAA service account has permissions to invoke the Todo Agent. Configure `GoogleAuth` to generate ID tokens / Access Tokens for A2A.
 
 **Configuration**:

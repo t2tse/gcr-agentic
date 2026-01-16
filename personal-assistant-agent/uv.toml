@@ -1,0 +1,7 @@
+[[index]]
+url = "https://pypi.org/simple"
+default = true
+
+[[index]]
+name = "private"
+url = "https://us-python.pkg.dev/artifact-foundry-prod/ah-3p-staging-python/simple/"
