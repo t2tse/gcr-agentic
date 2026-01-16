@@ -17,6 +17,7 @@ The complete solution consists of these microservices components:
 *   **Authentication**: Firebase Authentication
 *   **AI Models**: Google Gemini API
 *   **MCP**: Model Context Protocol SDK (`@modelcontextprotocol/sdk`)
+*   **A2A Security**: OAuth 2.0 with Google Access Tokens (for inter-agent communication)
 
 
 # UI Design Requirements
@@ -78,7 +79,10 @@ Todo Agent is an agent in a microservice that can invoke Checkmate for to-do lis
 **Technical Requirements:**
 *   Built using **Agent Development Kit ADK (Python)**.
 *   Exposed via A2A (Agent-to-Agent) interfaces.
-*   Invokes Checkmate for read/write operations via MCP (Model Context Protocol)
+*   Invokes Checkmate for read/write operations via MCP (Model Context Protocol).
+*   **A2A Security**: Implements `AuthMiddleware` to validate Google OAuth bearer tokens on RPC endpoints.
+*   **Credential Forwarding**: Dynamically forwards the validated A2A bearer token to downstream MCP services (Checkmate) using a custom `header_provider`.
+*   **Discovery**: Exposes a public Agent Card and a protected Extended Agent Card for tool introspection.
 *   Uses **Gemini API** for core reasoning in ADK.
 *   Uses **Gemini API** to process natural language input, then break it down into tasks, organise into the most relevant task list, set priority and due date according to user needs.
 
@@ -108,6 +112,7 @@ A landing web page for each authenticated user connecting Checkmate, Stash and P
 *   **Security**: 
     *   Data encryption at rest (Firestore default) and in transit (TLS).
     *   Tenant/User isolation enforced at the API/Database level.
+    *   **A2A Authorization**: Inter-agent communication is secured via Google OAuth 2.0, with specific token validation for RPC calls while maintaining public visibility for discovery endpoints.
 *   **Scalability**: Services should be stateless and deployable on serverless infrastructure (e.g., Cloud Run) to scale to zero and handle high load.
 *   **Latency**: UI interactions should be responsive (<100ms). Heavy AI tasks should be handled asynchronously where possible with progressive updates.
 

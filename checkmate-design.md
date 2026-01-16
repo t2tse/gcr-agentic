@@ -37,7 +37,13 @@ Based on the high-level requirements, the Checkmate UI supports:
 *   **Database**: Google Cloud Firestore.
     *   Collection: `checkmate_lists`
     *   Collection: `checkmate_tasks`
-*   **Security**: Firebase Auth Token validation; Data isolation via `userId`.
+*   **Security**: Dual authentication support:
+    *   **Firebase Auth**: For direct user access from the SaaS Portal (verifying ID Token).
+    *   **Google OAuth 2.0**: For A2A communication. Agents forward a Google Access Token.
+        *   **Audience Validation**: Token `aud` or `azp` MUST match the service's `GOOGLE_CLIENT_ID`.
+        *   **User Mapping**: Maps Google Token Subject (`sub`) to a Firebase User via Provider UID (preferred) or Email.
+        *   **Strict Access**: The user MUST already exist in Firebase Authentication (i.e., signed up via Portal). Shadow accounts are not created.
+    *   **Data Isolation**: Enforced by extracting the mapped `userId` and applying filters to all Firestore queries.
 *   **Inbox Filtering**: Backend strictly filters Inbox tasks (where `listId` is null/undefined) to prevent data leaking from other lists.
 
 ## 4. API Endpoints

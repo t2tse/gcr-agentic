@@ -111,8 +111,12 @@ The application (the "Authorized User") must act on behalf of the user.
     *   **MCP Client (Agent)**: Sends a **Google Access Token**.
 2.  **Guard**: Middleware/Guard validates the token:
     *   **Firebase ID Token**: Verified using `admin.auth().verifyIdToken()`.
-    *   **Google Access Token**: Verified using `GoogleAuth` library. Returns a Google User ID, which is then mapped to a Firebase UID via `admin.auth().getUserByProviderUid()`.
-    *   **Result**: Regardless of token type, the Guard resolves a consistent `userId` (Firebase UID).
+    *   **Google Access Token**: Verified using `GoogleAuth` library.
+        *   **Audience Check**: Validates `aud` or `azp` matches `GOOGLE_CLIENT_ID`.
+        *   **User Mapping**: Maps Google `sub` to Firebase UID via `admin.auth().getUserByProviderUid()`.
+        *   **Fallback**: If strict mapping fails, attempts to map via Email (`admin.auth().getUserByEmail()`).
+        *   **Strictness**: If no Firebase user is found, the request is **rejected** (401 Unauthorized). Shadow users are **not** created.
+    *   **Result**: The Guard resolves a consistent `userId` (Firebase UID) corresponding to the authenticated identity.
 3.  **Repository/Service**:
     *   **Writes**: Automatically inject `userId` into the DTO before saving.
     *   **Reads**: Always append `.where('userId', '==', uid)` to every query. 
