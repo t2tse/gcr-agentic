@@ -26,6 +26,20 @@ A simple, standalone Python client for testing Agent-to-Agent (A2A) communicatio
     - Ensure your Google Cloud OAuth Client is configured with the following Redirect URI:
       - `http://localhost:7777/oauth/callback`
 
+## Configuration
+
+You can configure the client using environment variables:
+
+- `AGENT_URL`: URL of the A2A Agent (default: `http://localhost:8000/a2a/app`)
+- `REDIRECT_PORT`: Port for local OAuth callback server (default: `7777`)
+- `REDIRECT_PATH`: Path for OAuth callback (default: `/oauth/callback`)
+- `SCOPES`: Comma-separated list of OAuth scopes (default: email, openid, profile)
+
+Example:
+```bash
+AGENT_URL=http://myapp.com/a2a/app REDIRECT_PORT=8080 uv run client.py
+```
+
 ## Usage
 
 1.  **Run the Client:**
@@ -42,6 +56,10 @@ A simple, standalone Python client for testing Agent-to-Agent (A2A) communicatio
     - Example prompts:
       - "What time is it?"
       - "what can you help me with?"
+    - **Commands**:
+      - `/card`: Fetch and display the public Agent Card.
+      - `/extended`: Fetch and display the authenticated Extended Agent Card.
+      - `/help`: Show available commands.
     - Type `exit` or press `Ctrl+C` to quit.
 
 ## Troubleshooting

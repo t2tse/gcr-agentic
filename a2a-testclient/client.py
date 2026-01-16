@@ -17,10 +17,10 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 
-SCOPES = ["https://www.googleapis.com/auth/userinfo.email", "openid", "https://www.googleapis.com/auth/userinfo.profile"]
-AGENT_URL = "http://localhost:8000/a2a/app"
-REDIRECT_PORT = 7777
-REDIRECT_PATH = "/oauth/callback"
+SCOPES = os.environ.get("SCOPES", "https://www.googleapis.com/auth/userinfo.email,openid,https://www.googleapis.com/auth/userinfo.profile").split(",")
+AGENT_URL = os.environ.get("AGENT_URL", "http://localhost:8000/a2a/app")
+REDIRECT_PORT = int(os.environ.get("REDIRECT_PORT", "7777"))
+REDIRECT_PATH = os.environ.get("REDIRECT_PATH", "/oauth/callback")
 REDIRECT_URI = f"http://localhost:{REDIRECT_PORT}{REDIRECT_PATH}"
 
 def get_credentials():
@@ -114,6 +114,7 @@ async def main():
         return
 
     # 3. Chat Loop
+    print("\n/help for available commands\n")
     print("\n--- Chat Started (type 'exit' to quit) ---\n")
     while True:
         try:
@@ -126,6 +127,39 @@ async def main():
         try:
             if not user_input.strip():
                 continue
+
+            if user_input.startswith("/"):
+                cmd = user_input.lower().strip()
+                if cmd == "/card":
+                    try:
+                        print("Fetching Agent Card...")
+                        card = await client.get_card()
+                        print(json.dumps(card.dict(), indent=2, default=str))
+                    except Exception as e:
+                        print(f"Error fetching card: {e}")
+                    continue
+                elif cmd == "/extended":
+                    try:
+                        print("Fetching Extended Agent Card...")
+                        ext_url = f"{AGENT_URL}/agent/authenticatedExtendedCard"
+                        async with httpx.AsyncClient(headers={"Authorization": f"Bearer {creds.token}"}, timeout=10.0) as ac:
+                            resp = await ac.get(ext_url)
+                            resp.raise_for_status()
+                            print(json.dumps(resp.json(), indent=2))
+                    except Exception as e:
+                        print(f"Error fetching extended card: {e}")
+                    continue
+                elif cmd == "/help":
+                    print("\n--- Available Commands ---")
+                    print("/card     - Fetch and display the public Agent Card")
+                    print("/extended - Fetch and display the authenticated Extended Agent Card")
+                    print("/help     - Show this help message")
+                    print("exit      - Quit the application")
+                    print("Any other text will be sent as a message to the agent.\n")
+                    continue
+                else:
+                    print(f"Unknown command: {cmd}. Type /help for available commands.")
+                    continue
 
             msg = Message(
                 role=Role.user,
