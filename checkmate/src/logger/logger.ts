@@ -8,7 +8,7 @@ const logFormat = printf(({ level, message, timestamp, context }) => {
 
 export const createLogger = (context: string) => {
     return winston.createLogger({
-        level: 'info',
+        level: process.env.LOG_LEVEL || 'info',
         format: combine(
             colorize(),
             timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),

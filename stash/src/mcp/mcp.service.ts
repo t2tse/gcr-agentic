@@ -22,12 +22,15 @@ export class McpService implements OnModuleDestroy {
 
     async handleIncomingRequest(req: Request, res: Response, userId: string) {
         const sessionId = req.query.sessionId as string;
+        this.logger.debug(`Handling MCP request for user ${userId}, session ${sessionId || 'new'}`);
         let transport: StreamableHTTPServerTransport;
 
         if (sessionId && this.sessions.has(sessionId)) {
+            this.logger.debug(`Reusing existing MCP session: ${sessionId}`);
             transport = this.sessions.get(sessionId)!.transport;
         } else {
             transport = new StreamableHTTPServerTransport();
+            this.logger.debug(`Creating new MCP session: ${sessionId || 'new'}`);
             const server = new McpServer({
                 name: 'Stash',
                 version: '0.0.1',

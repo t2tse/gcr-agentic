@@ -45,5 +45,5 @@ gcloud run deploy stash \
   --project ${GOOGLE_CLOUD_PROJECT_ID} \
   --region ${GOOGLE_CLOUD_REGION} \
   --allow-unauthenticated \
-  --set-env-vars GCP_PROJECT_ID=${GOOGLE_CLOUD_PROJECT_ID},GCP_REGION=${GOOGLE_CLOUD_REGION},FIRESTORE_DATABASE_ID=my-personal-assistant,APP_HOST=https://stash-${GOOGLE_CLOUD_PROJECT_NUMBER}.us-central1.run.app
+  --set-env-vars GCP_PROJECT_ID=${GOOGLE_CLOUD_PROJECT_ID},GCP_REGION=${GOOGLE_CLOUD_REGION},FIRESTORE_DATABASE_ID=my-personal-assistant,GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID},APP_HOST=https://stash-${GOOGLE_CLOUD_PROJECT_NUMBER}.us-central1.run.app
 ```
