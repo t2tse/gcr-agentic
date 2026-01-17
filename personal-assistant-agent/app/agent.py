@@ -1,7 +1,7 @@
 import os
 import google.auth
 import httpx
-from typing import Any
+from typing import Any, Callable
 from google.adk.agents import Agent
 from google.adk.apps.app import App
 from google.adk.models import Gemini
@@ -9,16 +9,12 @@ from google.adk.tools import McpToolset
 from google.adk.tools.mcp_tool import StreamableHTTPConnectionParams
 from google.genai import types
 
+from google.adk.agents.remote_a2a_agent import AGENT_CARD_WELL_KNOWN_PATH
 from google.adk.agents.remote_a2a_agent import RemoteA2aAgent
-from a2a.client import ClientFactory, ClientConfig, ClientCallInterceptor, Consumer
-from a2a.client.client import Client
-from a2a.client.auth import AuthInterceptor
-from a2a.types import AgentCard
-from typing import Optional
+from a2a.client import ClientConfig, ClientFactory
 
 from app.context import auth_token_ctx
 from app.tools import get_current_time
-from app.security import ForwardingCredentialService
 
 def get_auth_headers(context: Any) -> dict[str, str]:
     """Retrieve auth headers from the current context variable."""
@@ -44,48 +40,43 @@ stash_tools = McpToolset(
     header_provider=get_auth_headers
 )
 
-class AuthenticatedClientFactory(ClientFactory):
-    def __init__(
-        self,
-        config: ClientConfig,
-        interceptors: list[ClientCallInterceptor],
-        consumers: Optional[list[Consumer]] = None,
-    ):
-        super().__init__(config=config, consumers=consumers)
-        self._interceptors = interceptors
+def create_authenticated_httpx_client(
+    header_provider: Callable[[Any], dict[str, str]]
+) -> httpx.AsyncClient:
+    """
+    Create an httpx client that automatically injects auth headers from context.
+    
+    Args:
+        header_provider: Callable that returns a dict of headers to inject
+        
+    Returns:
+        Configured httpx.AsyncClient with auth event hooks
+    """
+    async def add_auth_headers(request: httpx.Request):
+        auth_headers = header_provider(None)
+        for key, value in auth_headers.items():
+            request.headers[key] = value
+    
+    return httpx.AsyncClient(
+        event_hooks={"request": [add_auth_headers]}
+    )
 
-    def create(
-        self,
-        card: AgentCard,
-        consumers: Optional[list[Consumer]] = None,
-        interceptors: Optional[list[ClientCallInterceptor]] = None,
-        extensions: Optional[list[str]] = None,
-    ) -> Client:
-        # Inject our auth interceptor into the list
-        combined_interceptors = (interceptors or []) + self._interceptors
-        print(f"[DEBUG] AuthenticatedClientFactory.create: Injecting interceptors. Total count: {len(combined_interceptors)}")
-        return super().create(card, consumers, combined_interceptors, extensions)
 
+# Create httpx client with auth headers from context
+# This handles ALL authentication for both HTTP and A2A protocol requests
+authenticated_httpx_client = create_authenticated_httpx_client(get_auth_headers)
 
-# Initialize Todo Agent Remote Agent
-credential_service = ForwardingCredentialService(header_provider=get_auth_headers)
-auth_interceptor = AuthInterceptor(credential_service)
+# Configure A2A client
+a2a_client_config = ClientConfig(httpx_client=authenticated_httpx_client)
 
-# Use our custom factory to ensure interceptor is used
-a2a_client_factory = AuthenticatedClientFactory(
-    config=ClientConfig(),
-    interceptors=[auth_interceptor]
-)
-
-# Create a shared httpx client to prevent RemoteA2aAgent from overwriting our factory
-async_client = httpx.AsyncClient()
+# Create client factory with authenticated config
+a2a_client_factory = ClientFactory(config=a2a_client_config)
 
 todo_agent_remote = RemoteA2aAgent(
     name="todo_agent",
     description="Dedicated agent for managing tasks, reminders, and to-do lists.",
-    agent_card=f"{todo_agent_url}/.well-known/agent-card.json",
-    a2a_client_factory=a2a_client_factory,
-    httpx_client=async_client
+    agent_card=f"{todo_agent_url}{AGENT_CARD_WELL_KNOWN_PATH}",
+    a2a_client_factory=a2a_client_factory
 )
 
 paa_agent = Agent(

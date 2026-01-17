@@ -8,33 +8,9 @@ from google.oauth2 import id_token
 from google.auth.transport import requests
 import os
 
-from a2a.client.auth import CredentialService
-from a2a.client.middleware import ClientCallContext
-from typing import Callable, Any
-
 from app.context import auth_token_ctx
 
 logger = logging.getLogger(__name__)
-
-class ForwardingCredentialService(CredentialService):
-    def __init__(self, header_provider: Callable[[Any], dict[str, str]]):
-        self.header_provider = header_provider
-
-    async def get_credentials(
-        self,
-        security_scheme_name: str,
-        context: Optional[ClientCallContext] = None
-    ) -> Optional[str]:
-        # We assume headers provided are {"Authorization": "Bearer <token>"}
-        headers = self.header_provider(None)
-        logger.info(f"[DEBUG] ForwardingCredentialService headers: {headers}")
-        auth_header = headers.get("Authorization")
-        if auth_header and auth_header.startswith("Bearer "):
-            token = auth_header.split(" ")[1]
-            logger.info(f"[DEBUG] ForwardingCredentialService found token: {token[:10]}...")
-            return token
-        logger.warning("[DEBUG] ForwardingCredentialService: No Bearer token found in headers")
-        return None
 
 class AuthMiddleware(BaseHTTPMiddleware):
     """
