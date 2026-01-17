@@ -70,25 +70,31 @@ async def build_dynamic_agent_card() -> AgentCard:
         rpc_url=f"{os.getenv('APP_URL', 'http://localhost:8001')}{A2A_RPC_PATH}",
         agent_version=os.getenv("AGENT_VERSION", "0.1.0"),
         capabilities=AgentCapabilities(streaming=True),
-        security_schemes={
-            "google_oauth": OAuth2SecurityScheme(
+    )
+    agent_card = await agent_card_builder.build()
+
+    # Manually add security schemes as builder might not expose them directly yet
+    if not agent_card.security_schemes:
+        agent_card.security_schemes = {
+             "google_oauth": OAuth2SecurityScheme(
+                type="oauth2",
                 description="Google OAuth 2.0",
-                flows=OAuthFlows(
-                    authorizationCode=AuthorizationCodeOAuthFlow(
-                        authorization_url="https://accounts.google.com/o/oauth2/v2/auth",
-                        token_url="https://oauth2.googleapis.com/token",
+                flows={
+                    "authorizationCode": AuthorizationCodeOAuthFlow(
+                        authorizationUrl="https://accounts.google.com/o/oauth2/v2/auth",
+                        tokenUrl="https://oauth2.googleapis.com/token",
                         scopes={
                             "openid": "OpenID Connect",
                             "email": "Email",
-                            "profile": "Profile",
-                        },
+                            "profile": "Profile"
+                        }
                     )
-                ),
-            )
-        },
-        security=[{"google_oauth": []}],
-    )
-    agent_card = await agent_card_builder.build()
+                }
+             )
+        }
+    if not agent_card.security:
+        agent_card.security = [{"google_oauth": []}]
+
     return agent_card
 
 
