@@ -1,8 +1,8 @@
 # My Personal Assistant
 
-*This is not a prototype for an internal coding contest to explore the capabilities of AI agents and microservices architecture. Most of the development is done using [Antigravity](https://antigravity.google/) and [Stich](https://stitch.withgoogle.com/)*
+*This is a prototype for an internal coding contest to explore the capabilities of AI agents and microservices architecture. Most of the development is done using [Antigravity](https://antigravity.google/) and [Stich](https://stitch.withgoogle.com/)*
 
-A comprehensive SaaS web-based agentic application that helps you organize day-to-day tasks and personal information. Built with modern cloud technologies (Cloud Run, Firestore, Vertex AI, Gemini Enterprise), AI agents (A2A, ADK), and microservices architecture (MCP, REST API).
+My Personal Assistant is a comprehensive SaaS web-based agentic application that helps you organize day-to-day tasks and chores. Built with modern cloud technologies (Cloud Run, Firestore, Vertex AI, Gemini Enterprise), AI agents (A2A, ADK), and microservices architecture (MCP, REST API).
 
 ## 📋 Table of Contents
 
@@ -137,11 +137,11 @@ graph TD
 | Layer | Technology |
 |-------|-----------|
 | **Frontend** | Next.js, React, Firebase Auth |
-| **Backend** | Node.js, NestJS, Winston Logger |
-| **Agents** | ADK (Python), Agent Development Kit |
+| **Backend** | NestJS, Winston Logger |
+| **Agents** | ADK (Python) |
 | **Database** | Google Cloud Firestore |
 | **Authentication** | Firebase Auth, OAuth 2.0 |
-| **AI/LLM** | Google Gemini API |
+| **AI/LLM** | Google Vertex AI Gemini API |
 | **Protocols** | MCP (Model Context Protocol), A2A (Agent-to-Agent) |
 | **Infrastructure** | Google Cloud Run, GCP |
 | **Communication** | REST API, Server-Sent Events (SSE), JSON-RPC |
