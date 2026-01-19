@@ -23,8 +23,6 @@ My Personal Assistant is a comprehensive SaaS web-based agentic application that
   - [Component Documentation](#component-documentation)
   - [Data Model](#data-model)
 - [Project Structure](#project-structure)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Overview
 
