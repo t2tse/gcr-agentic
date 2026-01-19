@@ -257,15 +257,3 @@ gcr-agentic/
 └── README.md               # This file
 ```
 
-## Contributing
-
-This is a personal project, but contributions are welcome. Please ensure:
-
-1. All new services follow the established patterns
-2. Documentation is updated for any architectural changes
-3. Security and data isolation principles are maintained
-4. Tests are included for new features
-
-## License
-
-[Add your license here]
