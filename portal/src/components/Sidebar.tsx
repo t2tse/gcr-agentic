@@ -225,6 +225,17 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                         <span className={`material-symbols-outlined ${isActive('/stash') ? 'text-primary' : ''}`} style={isActive('/stash') ? { fontVariationSettings: "'FILL' 1" } : {}}>link</span>
                         <span className="text-sm font-medium">Stash Links</span>
                     </Link>
+
+                    <Link
+                        href="/ai-assistant"
+                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg group transition-colors ${isActive('/ai-assistant')
+                            ? 'bg-primary/10 text-primary'
+                            : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
+                            }`}
+                    >
+                        <span className={`material-symbols-outlined ${isActive('/ai-assistant') ? 'text-primary' : ''}`} style={isActive('/ai-assistant') ? { fontVariationSettings: "'FILL' 1" } : {}}>smart_toy</span>
+                        <span className="text-sm font-medium">AI Assistant</span>
+                    </Link>
                 </nav>
                 <div className="p-4 border-t border-slate-200 dark:border-slate-800">
                     {user && (
