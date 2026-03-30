@@ -92,17 +92,16 @@ build-inspector-if-needed:
 deploy:
 	PROJECT_ID=$$(gcloud config get-value project) && \
 	PROJECT_NUMBER=$$(gcloud projects describe $$PROJECT_ID --format="value(projectNumber)") && \
-	gcloud beta run deploy todo-agent \
+	gcloud beta run deploy personal-assistant-agent \
 		--source . \
 		--memory "4Gi" \
 		--project $$PROJECT_ID \
 		--region "us-central1" \
 		--no-allow-unauthenticated \
-		--no-cpu-throttling \
 		--labels "created-by=adk" \
 		--update-build-env-vars "AGENT_VERSION=$(shell awk -F'"' '/^version = / {print $$2}' pyproject.toml || echo '0.0.0')" \
 		--update-env-vars \
-		"COMMIT_SHA=$(shell git rev-parse HEAD),APP_URL=https://todo-agent-$$PROJECT_NUMBER.us-central1.run.app" \
+		"COMMIT_SHA=$(shell git rev-parse HEAD),APP_URL=https:///personal-assistant-agent-$$PROJECT_NUMBER.us-central1.run.app" \
 		$(if $(IAP),--iap) \
 		$(if $(PORT),--port=$(PORT))
 
